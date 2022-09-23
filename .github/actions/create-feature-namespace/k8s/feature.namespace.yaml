@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: $NAMESPACE
+  labels:
+    alehechka/feature-branch: $NAMESPACE
+  annotations:
+    alehechka/feature-branch: $REF_NAME
+    alehechka/feature-service: $GITHUB_REPOSITORY
+    alehechka/feature-actor: $GITHUB_ACTOR

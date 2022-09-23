@@ -1,0 +1,22 @@
+name: Test creating feature namespaces
+on:
+  - workflow_dispatch
+  # - pull_request
+
+jobs:
+  test-create-feature-namespaces:
+    name: Test creating feature namespaces
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: action
+
+      - name: Create Feature Branch Namespace
+        id: namespace
+        uses: ./action/.github/actions/create-feature-namespace
+
+      - name: 'Feature Namespace: ${{ steps.namespace.outputs.namespace }}'
+        run: echo "${{ steps.namespace.outputs.namespace }}"
