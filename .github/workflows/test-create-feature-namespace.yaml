@@ -11,12 +11,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          path: action
 
       - name: Create Feature Branch Namespace
         id: namespace
-        uses: ./action/.github/actions/create-feature-namespace
+        uses: ./create-feature-namespace
 
       - name: 'Feature Namespace: ${{ steps.namespace.outputs.namespace }}'
         run: echo "${{ steps.namespace.outputs.namespace }}"

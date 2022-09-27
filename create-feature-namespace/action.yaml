@@ -11,21 +11,21 @@ runs:
   steps:
     - name: Get Ref
       id: ref
-      uses: ./action/.github/actions/get-ref
+      uses: alehechka/kubernetes-actions/get-ref@main
 
     - name: Prepare Namespace Name
       id: namespace
-      run: ./action/scripts/clean_variable.sh ${{ steps.ref.outputs.name }} name
+      run: ${{ github.action_path }}/scripts/clean_variable.sh ${{ steps.ref.outputs.name }} name
       shell: bash
 
     - name: Get Existing Namespace
       id: namespace-json
-      run: ./action/scripts/get_namespace.sh ${{ steps.namespace.outputs.name }} value
+      run: ${{ github.action_path }}/scripts/get_namespace.sh ${{ steps.namespace.outputs.name }} value
       shell: bash
 
     - name: Create Feature Namespace
       if: steps.namespace-json.outputs.value == ''
-      run: cat ./action/.github/actions/create-feature-namespace/k8s/feature.namespace.yaml | envsubst | kubectl apply -f -
+      run: cat ${{ github.action_path }}/k8s/feature.namespace.yaml | envsubst | kubectl apply -f -
       env:
         NAMESPACE: ${{ steps.namespace.outputs.name }}
         REF_NAME: ${{ steps.ref.outputs.name }}
