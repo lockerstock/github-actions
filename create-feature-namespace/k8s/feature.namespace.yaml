@@ -3,8 +3,8 @@ kind: Namespace
 metadata:
   name: $NAMESPACE
   labels:
-    alehechka/feature-branch: $NAMESPACE
+    $GITHUB_REPOSITORY_OWNER/feature-branch: $NAMESPACE
   annotations:
-    alehechka/feature-branch: $REF_NAME
-    alehechka/feature-service: $GITHUB_REPOSITORY
-    alehechka/feature-actor: $GITHUB_ACTOR
+    $GITHUB_REPOSITORY_OWNER/feature-branch: $REF_NAME
+    $GITHUB_REPOSITORY_OWNER/feature-service: $GITHUB_REPOSITORY
+    $GITHUB_REPOSITORY_OWNER/feature-actor: $GITHUB_ACTOR
