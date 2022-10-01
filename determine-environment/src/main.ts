@@ -15,12 +15,12 @@ async function run(): Promise<void> {
   const octokit = new Octokit({auth: token})
   const repository = await getRepository(octokit)
 
-  if (await isStagingBranch(repository.default_branch)) {
+  if (await isStagingBranch(repository.data.default_branch)) {
     core.setOutput(environment, 'staging')
     return
   }
 
-  if (await isProductionTag(octokit, repository.default_branch)) {
+  if (await isProductionTag(octokit, repository.data.default_branch)) {
     core.setOutput(environment, 'production')
   }
 }

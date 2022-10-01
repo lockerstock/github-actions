@@ -1,4 +1,3 @@
-import {components} from '@octokit/openapi-types'
 import {Octokit} from 'octokit'
 
 export function getRepoOwner(): string {
@@ -33,17 +32,12 @@ export function getRefType(): RefType {
   return process.env.GITHUB_REF_TYPE as RefType
 }
 
-export async function getRepository(
-  octokit: Octokit
-): Promise<components['schemas']['repository']> {
+export async function getRepository(octokit: Octokit) {
   const owner = getRepoOwner()
   const repo = getRepo()
 
-  const data = octokit.request('GET /repos/{owner}/{repo}', {
+  return octokit.request('GET /repos/{owner}/{repo}', {
     owner,
     repo
   })
-
-  // the @vercel/ncc compiler does not want to automatically cast this above
-  return data as unknown as components['schemas']['repository']
 }
