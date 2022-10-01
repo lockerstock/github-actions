@@ -1,10 +1,15 @@
 name: Create feature branch Namespace
 description: Creates a feature branch Namespace with proper labels to allow replication of resources
 
+inputs:
+  namespace:
+    description: 'Namespace to deploy Helm chart. If not provided, will be calculated from action trigger'
+    required: false
+
 outputs:
   namespace:
-    description: Prepare namespace
-    value: ${{ steps.namespace.outputs.name }}
+    description: Prepared namespace
+    value: ${{ steps.namespace.outputs.variable }}
 
 runs:
   using: composite
@@ -12,21 +17,24 @@ runs:
     - name: Get Ref
       id: ref
       uses: alehechka-io/kubernetes-actions/get-ref@main
+      with:
+        custom_ref: ${{ inputs.namespace }}
 
     - name: Prepare Namespace Name
       id: namespace
-      run: ${{ github.action_path }}/scripts/clean_variable.sh ${{ steps.ref.outputs.name }} name
-      shell: bash
+      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      with:
+        variable: ${{ steps.ref.outputs.name }}
 
     - name: Get Existing Namespace
       id: namespace-json
-      run: ${{ github.action_path }}/scripts/get_namespace.sh ${{ steps.namespace.outputs.name }} value
+      run: ${{ github.action_path }}/scripts/get_namespace.sh ${{ steps.namespace.outputs.variable }} value
       shell: bash
 
     - name: Create Feature Namespace
       if: steps.namespace-json.outputs.value == ''
       run: cat ${{ github.action_path }}/k8s/feature.namespace.yaml | envsubst | kubectl apply -f -
       env:
-        NAMESPACE: ${{ steps.namespace.outputs.name }}
+        NAMESPACE: ${{ steps.namespace.outputs.variable }}
         REF_NAME: ${{ steps.ref.outputs.name }}
       shell: bash

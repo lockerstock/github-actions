@@ -1,0 +1,30 @@
+name: Deploy Helm Chart
+description: Prepares and installs a Helm chart to determined Namespace
+
+inputs:
+  chart_path:
+    description: 'Path to Helm chart'
+    required: true
+
+  image_tag:
+    description: 'Tag of Docker image. If not provided, will be calculated from action trigger'
+    required: false
+
+  namespace:
+    description: 'Namespace to deploy Helm chart. If not provided, will be calculated from action trigger'
+    required: false
+
+outputs:
+  namespace:
+    description: 'Name of Namespace that was deployed to.'
+    value: TODO
+
+  image_tag:
+    description: 'Docker image tag that was deployed.'
+    value: TODO
+
+runs:
+  using: composite
+  steps:
+    - name: Create Namespace
+      uses: alehechka-io/kubernetes-actions/create-feature-namespace@main

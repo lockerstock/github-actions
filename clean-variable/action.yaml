@@ -1,0 +1,20 @@
+name: Clean Variable
+description: Sanitizes given variable for use as K8S resource and/or subdomain
+
+inputs:
+  variable:
+    description: 'Variable to sanitize'
+    required: true
+
+outputs:
+  variable:
+    description: 'Sanitized variable'
+    value: ${{ steps.sanitized.outputs.variable }}
+
+runs:
+  using: composite
+  steps:
+    - name: Sanitize Variable
+      id: sanitized
+      run: ${{ github.action_path }}/scripts/clean_variable.sh "${{ inputs.variable }}" variable
+      shell: bash
