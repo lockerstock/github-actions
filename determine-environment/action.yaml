@@ -2,8 +2,8 @@ name: Determine Environment
 description: Based on trigger event and ref, will determine which environment to use for deployment.
 inputs:
   token:
-    description: GITHUB_TOKEN to access to the GitHub API
-    required: true
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
 outputs:
   environment:
     description: Determined Environment

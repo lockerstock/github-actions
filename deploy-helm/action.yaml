@@ -2,6 +2,10 @@ name: Deploy Helm Chart
 description: Prepares and installs a Helm chart to determined Namespace
 
 inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
   chart_path:
     description: 'Path to Helm chart'
     required: true
@@ -27,4 +31,8 @@ runs:
   using: composite
   steps:
     - name: Create Namespace
+      id: namespace
       uses: alehechka-io/kubernetes-actions/create-feature-namespace@main
+      with:
+        namespace: ${{ inputs.namespace }}
+        token: ${{ inputs.token }}

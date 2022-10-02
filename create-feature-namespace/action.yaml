@@ -2,6 +2,10 @@ name: Create feature branch Namespace
 description: Creates a feature branch Namespace with proper labels to allow replication of resources
 
 inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
   namespace:
     description: 'Namespace to deploy Helm chart. If not provided, will be calculated from action trigger'
     required: false
@@ -20,15 +24,36 @@ runs:
       with:
         custom_ref: ${{ inputs.namespace }}
 
+    - name: Get Environment
+      id: environment
+      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      with:
+        token: ${{ inputs.token }}
+
+    - name: Determine Namespace
+      id: determined
+      run: |
+        if [ "${{ steps.environment.outputs.environment }}" = "production" ]; then
+          echo "::set-output name=namespace::production"
+
+        elif [ "${{ steps.environment.outputs.environment }}" = "staging" ]; then
+          echo "::set-output name=namespace::staging"
+
+        else
+          echo "::set-output name=namespace::${{ steps.ref.outputs.name }}"
+
+        fi
+      shell: bash
+
     - name: Prepare Namespace Name
       id: namespace
       uses: alehechka-io/kubernetes-actions/clean-variable@main
       with:
-        variable: ${{ steps.ref.outputs.name }}
+        variable: ${{ steps.determined.outputs.namespace }}
 
     - name: Get Existing Namespace
       id: namespace-json
-      run: ${{ github.action_path }}/scripts/get_namespace.sh ${{ steps.namespace.outputs.variable }} value
+      run: ${{ github.action_path }}/scripts/get_namespace.sh "${{ steps.namespace.outputs.variable }}" value
       shell: bash
 
     - name: Create Feature Namespace

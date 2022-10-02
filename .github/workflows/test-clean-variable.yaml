@@ -1,0 +1,28 @@
+name: Test clean-variable
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'clean-variable/**/*'
+      - '.github/workflows/test-clean-variable.yaml'
+
+jobs:
+  test-clean-variable:
+    name: Test clean variable
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Clean Variable
+        id: cleansed
+        uses: ./clean-variable
+        with:
+          variable: 'big/feature/JIRA-123-SomeReallyCoolFeature_idkkindapadding_123456789!@#$%^&*()extra'
+
+      - name: 'Cleansed: ${{ steps.cleansed.outputs.variable }}'
+        run: echo "${{ steps.cleansed.outputs.variable }}"
