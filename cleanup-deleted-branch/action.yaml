@@ -45,10 +45,10 @@ runs:
     - name: Get Helm Secrets
       if: steps.namespace.outputs.exists == 'true'
       id: secrets
-      run: ${{ github.action_path }}/scripts/has_helm_secrets.sh "${{ steps.namespace.outputs.name }}" exist
+      run: ${{ github.action_path }}/scripts/has_helm_secrets.sh "${{ steps.namespace.outputs.name }}" exists
       shell: bash
 
     - name: Delete Namespace
-      if: steps.secrets.outputs.exists != 'true'
+      if: steps.namespace.outputs.exists == 'true' && steps.secrets.outputs.exists != 'true'
       run: kubectl delete namespace "${{ steps.namespace.outputs.name }}"
       shell: bash

@@ -61,7 +61,7 @@ runs:
     - name: Does Namespace Exist
       id: exists
       run: |
-        if [ -n "${{ steps.namespace-json.outputs.value }}" ]; then
+        if [ -n '${{ steps.namespace-json.outputs.value }}' ]; then
           echo "::set-output name=exists::true"
 
         else
