@@ -11,21 +11,37 @@ inputs:
     required: true
 
   image_tag:
-    description: 'Tag of Docker image. If not provided, will be calculated from action trigger'
+    description: 'Tag of Docker image'
     required: false
+    default: latest
 
   namespace:
     description: 'Namespace to deploy Helm chart. If not provided, will be calculated from action trigger'
     required: false
 
+  wait:
+    description: 'Flag to have Helm deploy wait for resources to finish deploying'
+    required: false
+    default: 'false'
+
+  wait_for_jobs:
+    description: 'Flag to have Helm deploy wait for Jobs to finish running'
+    required: false
+    default: 'false'
+
+  timeout:
+    description: Sets time to wait for Kubernetes operations
+    required: false
+    default: '5m0s'
+
 outputs:
   namespace:
     description: 'Name of Namespace that was deployed to.'
-    value: TODO
+    value: ${{ steps.namespace.outputs.namespace }}
 
-  image_tag:
-    description: 'Docker image tag that was deployed.'
-    value: TODO
+  chart_version:
+    description: 'Version of the Helm chart that was deployed'
+    value: ${{ steps.version.outputs.variable }}
 
 runs:
   using: composite
@@ -36,3 +52,39 @@ runs:
       with:
         namespace: ${{ inputs.namespace }}
         token: ${{ inputs.token }}
+
+    - name: Get Repository Name
+      id: repository
+      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      with:
+        variable: ${{ github.repository }}
+
+    - name: Short Sha
+      id: short
+      run: echo "::set-output name=sha::${GITHUB_SHA::7}"
+      shell: bash
+
+    - name: Version
+      id: version
+      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      with:
+        token: ${{ inputs.token }}
+        production_variable: ${{ github.ref_name }}
+        staging_variable: 'v0.0.0-${{ steps.short.outputs.sha }}'
+        development_variable: 'v0.0.0-${{ steps.short.outputs.sha }}'
+
+    - name: Update versions
+      run: |
+        yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
+      working-directory: ${{ inputs.chart_path }}
+      shell: bash
+
+    - name: Helm Deploy
+      run: |
+        helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
+          --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
+          --set image.tag=${{ inputs.image_tag }} \
+          --wait=${{ inputs.wait }} \
+          --wait-for-jobs=${{ inputs.wait_for_jobs }} \
+          --timeout=${{ inputs.timeout }}
+      shell: bash

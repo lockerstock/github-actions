@@ -25,6 +25,12 @@ jobs:
         uses: ./determine-environment
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          production_variable: prod
+          staging_variable: stag
+          development_variable: dev
 
       - name: 'Environment: ${{ steps.environment.outputs.environment }}'
         run: echo "${{ steps.environment.outputs.environment }}"
+
+      - name: 'Variable: ${{ steps.environment.outputs.variable }}'
+        run: echo "${{ steps.environment.outputs.variable }}"

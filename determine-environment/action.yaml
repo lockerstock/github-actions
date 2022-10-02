@@ -4,9 +4,26 @@ inputs:
   token:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
     required: false
+
+  production_variable:
+    description: Variable to be returned if environment is determined to be "production"
+    required: false
+
+  staging_variable:
+    description: Variable to be returned if environment is determined to be "staging"
+    required: false
+
+  development_variable:
+    description: Variable to be returned if environment is determined to be "development"
+    required: false
+
 outputs:
   environment:
     description: Determined Environment
+
+  variable:
+    description: Determined environment variable
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
