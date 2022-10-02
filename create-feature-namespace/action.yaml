@@ -13,41 +13,23 @@ inputs:
 outputs:
   namespace:
     description: Prepared namespace
-    value: ${{ steps.namespace.outputs.variable }}
+    value: ${{ steps.namespace.outputs.name }}
 
 runs:
   using: composite
   steps:
-    - name: Get Ref
-      id: ref
-      uses: alehechka-io/kubernetes-actions/get-ref@main
-      with:
-        custom_ref: ${{ inputs.namespace }}
-
-    - name: Get Environment
-      id: environment
-      uses: alehechka-io/kubernetes-actions/determine-environment@main
+    - name: Get Namespace
+      id: namespace
+      uses: alehechka-io/kubernetes-actions/get-namespace@main
       with:
         token: ${{ inputs.token }}
-        production_variable: 'production'
-        staging_variable: 'staging'
-        development_variable: ${{ steps.ref.outputs.name }}
-
-    - name: Prepare Namespace Name
-      id: namespace
-      uses: alehechka-io/kubernetes-actions/clean-variable@main
-      with:
-        variable: ${{ steps.environment.outputs.variable }}
-
-    - name: Get Existing Namespace
-      id: namespace-json
-      run: ${{ github.action_path }}/scripts/get_namespace.sh "${{ steps.namespace.outputs.variable }}" value
-      shell: bash
+        namespace: ${{ inputs.namespace }}
+        get_namespace: 'true'
 
     - name: Create Feature Namespace
-      if: steps.namespace-json.outputs.value == ''
+      if: steps.namespace.outputs.exists != 'true'
       run: cat ${{ github.action_path }}/k8s/feature.namespace.yaml | envsubst | kubectl apply -f -
       env:
-        NAMESPACE: ${{ steps.namespace.outputs.variable }}
-        REF_NAME: ${{ steps.ref.outputs.name }}
+        NAMESPACE: ${{ steps.namespace.outputs.name }}
+        REF_NAME: ${{ steps.namespace.outputs.ref }}
       shell: bash

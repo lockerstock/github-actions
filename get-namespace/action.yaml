@@ -1,0 +1,71 @@
+name: Get Namespace
+description: Prepares Namespace name and can optionally retrieve the JSON output of the Namespace configuration
+
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  namespace:
+    description: 'Custom Namespace value to use if applicable'
+    required: false
+
+  get_namespace:
+    description: 'Flag to optionally retrieve the Namespace JSON (kubectl needs to be available and authorized prior)'
+    default: 'false'
+
+outputs:
+  name:
+    description: Prepared namespace
+    value: ${{ steps.namespace.outputs.variable }}
+  json:
+    description: Namespace JSON output
+    value: ${{ steps.namespace-json.outputs.value }}
+  exists:
+    description: Boolean flag determining whether or not the Namespace exists
+    value: ${{ steps.exists.outputs.exists }}
+  ref:
+    description: Action Trigger agnostic ref
+    value: ${{ steps.ref.outputs.name }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get Ref
+      id: ref
+      uses: alehechka-io/kubernetes-actions/get-ref@main
+      with:
+        custom_ref: ${{ inputs.namespace }}
+
+    - name: Get Environment
+      id: environment
+      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      with:
+        token: ${{ inputs.token }}
+        production_variable: 'production'
+        staging_variable: 'staging'
+        development_variable: ${{ steps.ref.outputs.name }}
+
+    - name: Prepare Namespace Name
+      id: namespace
+      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      with:
+        variable: ${{ steps.environment.outputs.variable }}
+
+    - name: Get Existing Namespace
+      if: inputs.get_namespace == 'true'
+      id: namespace-json
+      run: ${{ github.action_path }}/scripts/get_namespace.sh "${{ steps.namespace.outputs.variable }}" value
+      shell: bash
+
+    - name: Does Namespace Exist
+      id: exists
+      run: |
+        if [ -n "${{ steps.namespace-json.outputs.value }}" ]; then
+          echo "::set-output name=exists::true"
+
+        else
+          echo "::set-output name=exists::false"
+
+        fi
+      shell: bash

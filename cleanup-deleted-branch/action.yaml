@@ -1,0 +1,54 @@
+name: Cleanup Deleted Branch
+description: Cleans up resources deployed to feature branch upon branch deletion
+
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  wait:
+    description: 'Flag to have Helm deploy wait for resources to finish deploying'
+    required: false
+    default: 'false'
+
+  timeout:
+    description: Sets time to wait for Kubernetes operations
+    required: false
+    default: '5m0s'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get Repository Name
+      id: repository
+      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      with:
+        variable: ${{ github.repository }}
+
+    - name: Get Namespace
+      id: namespace
+      uses: alehechka-io/kubernetes-actions/get-namespace@main
+      with:
+        token: ${{ inputs.token }}
+        get_namespace: 'true'
+
+    - name: Uninstall Helm chart
+      if: steps.namespace.outputs.exists == 'true'
+      run: |
+        helm uninstall ${{ steps.repository.outputs.variable }} \
+          --namespace ${{ steps.namespace.outputs.name }} \
+          --wait=${{ inputs.wait }} \
+          --timeout=${{ inputs.timeout }} \
+          || true
+      shell: bash
+
+    - name: Get Helm Secrets
+      if: steps.namespace.outputs.exists == 'true'
+      id: secrets
+      run: ${{ github.action_path }}/scripts/has_helm_secrets.sh "${{ steps.namespace.outputs.name }}" exist
+      shell: bash
+
+    - name: Delete Namespace
+      if: steps.secrets.outputs.exists != 'true'
+      run: kubectl delete namespace "${{ steps.namespace.outputs.name }}"
+      shell: bash

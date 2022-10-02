@@ -1,0 +1,35 @@
+name: Test get-namespace
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'get-namespace/**/*'
+      - '.github/workflows/test-get-namespace.yaml'
+
+jobs:
+  test-get-namespace:
+    name: Test get namespace
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Namespace
+        id: namespace
+        uses: ./get-namespace
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          get_namespace: 'true'
+
+      - name: 'Namespace: ${{ steps.namespace.outputs.namespace }}'
+        run: echo "${{ steps.namespace.outputs.namespace }}"
+
+      - name: 'Ref: ${{ steps.namespace.outputs.ref }}'
+        run: echo "${{ steps.namespace.outputs.ref }}"
+
+      - name: 'JSON'
+        run: echo "${{ steps.namespace.outputs.json }}"
+
+      - name: 'Exists: ${{ steps.namespace.outputs.exists }}'
+        run: echo "${{ steps.namespace.outputs.exists }}"

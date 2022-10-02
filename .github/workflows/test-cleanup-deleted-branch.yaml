@@ -1,0 +1,18 @@
+name: Test cleanup-deleted-branch
+on:
+  - delete
+
+jobs:
+  test-cleanup-deleted-branch:
+    name: Test cleanup deleted branch
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cleanup Deleted Branch
+        id: environment
+        uses: ./cleanup-deleted-branch
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
