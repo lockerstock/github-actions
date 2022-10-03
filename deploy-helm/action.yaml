@@ -79,12 +79,26 @@ runs:
       working-directory: ${{ inputs.chart_path }}
       shell: bash
 
+    - name: Hostname
+      id: hostname
+      uses: alehechka-io/kubernetes-actions/get-configmap-value@main
+      with:
+        namespace: default
+        config_map: hostnames
+        variable: ${{ steps.version.outputs.environment }}
+      env:
+        NAMESPACE: ${{ steps.namespace.outputs.namespace }}
+
     - name: Helm Deploy
       run: |
+        cat ${{ inputs.chart_path }}/values.yaml | envsubst |\
         helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
           --set image.tag=${{ inputs.image_tag }} \
           --wait=${{ inputs.wait }} \
           --wait-for-jobs=${{ inputs.wait_for_jobs }} \
-          --timeout=${{ inputs.timeout }}
+          --timeout=${{ inputs.timeout }} \
+          -f -
       shell: bash
+      env:
+        HOSTNAME: ${{ steps.hostname.outputs.value }}

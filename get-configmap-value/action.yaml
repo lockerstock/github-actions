@@ -1,0 +1,37 @@
+name: Get ConfigMap value
+description: Retrieves a variable from a ConfigMap in Kubernetes cluster
+
+inputs:
+  variable:
+    description: Variable in the ConfigMap "data" to retrieve
+    required: true
+
+  namespace:
+    description: Namespace of ConfigMap
+    required: false
+    default: default
+
+  config_map:
+    description: Name of ConfigMap
+    required: true
+
+outputs:
+  value:
+    description: Value found in ConfigMap
+    value: ${{ steps.config_map.outputs.value }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get Hostname
+      id: config_map
+      run: |
+        VALUE=$(kubectl get ConfigMap \
+          --namespace "${{ inputs.namespace }}" \
+          -o json \
+          "${{ inputs.config_map }}" \
+          | jq -r '.data.${{ inputs.variable }}' \
+          | envsubst)
+
+        echo "::set-output name=value::$VALUE"
+      shell: bash

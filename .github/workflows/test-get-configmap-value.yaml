@@ -1,0 +1,28 @@
+name: Test get-configmap-value
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'get-configmap-value/**/*'
+      - '.github/workflows/test-get-configmap-value.yaml'
+
+jobs:
+  test-get-configmap-value:
+    name: Test get ConfigMap value
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get ConfigMap
+        id: config_map
+        uses: ./get-configmap-value
+        with:
+          config_map: 'hostnames'
+          variable: 'development'
+        env:
+          NAMESPACE: get-configmap-value
+
+      - name: 'Value: ${{ steps.config_map.outputs.value }}'
+        run: echo "${{ steps.config_map.outputs.value }}"
