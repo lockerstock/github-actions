@@ -16,7 +16,7 @@ on:
 jobs:
   cleanup-deleted-branch:
     name: Cleanup Deleted Branch
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Cleanup Deleted Branch

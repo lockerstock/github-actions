@@ -22,7 +22,6 @@ jobs:
       - name: Short Sha
         id: short
         uses: alehechka-io/kubernetes-actions/get-short-sha@main
-        shell: bash
 
       - name: 'Short Sha: ${{ steps.short.outputs.short_sha }}'
         run: echo "${{ steps.short.outputs.short_sha }}"
