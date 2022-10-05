@@ -1,0 +1,15 @@
+name: 'Get Short Sha'
+description: 'Truncates the commit sha to the first 7 digits'
+
+outputs:
+  short_sha:
+    description: 'Shortened Sha'
+    value: ${{ steps.short.outputs.sha }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Short Sha
+      id: short
+      run: echo "::set-output name=sha::${GITHUB_SHA::7}"
+      shell: bash

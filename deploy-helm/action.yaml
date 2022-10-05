@@ -65,7 +65,7 @@ runs:
 
     - name: Short Sha
       id: short
-      run: echo "::set-output name=sha::${GITHUB_SHA::7}"
+      uses: alehechka-io/kubernetes-actions/get-short-sha@main
       shell: bash
 
     - name: Version
@@ -74,8 +74,8 @@ runs:
       with:
         token: ${{ inputs.token }}
         production_variable: ${{ github.ref_name }}
-        staging_variable: 'v0.0.0-${{ steps.short.outputs.sha }}'
-        development_variable: 'v0.0.0-${{ steps.short.outputs.sha }}'
+        staging_variable: 'v0.0.0-${{ steps.short.outputs.short_sha }}'
+        development_variable: 'v0.0.0-${{ steps.short.outputs.short_sha }}'
 
     - name: Update versions
       run: yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
