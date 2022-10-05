@@ -43,6 +43,10 @@ outputs:
     description: 'Version of the Helm chart that was deployed'
     value: ${{ steps.version.outputs.variable }}
 
+  hostname:
+    description: 'Hostname provided to deployed Helm chart'
+    value: ${{ steps.hostname.outputs.value }}
+
 runs:
   using: composite
   steps:
@@ -74,8 +78,14 @@ runs:
         development_variable: 'v0.0.0-${{ steps.short.outputs.sha }}'
 
     - name: Update versions
+      run: yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
+      working-directory: ${{ inputs.chart_path }}
+      shell: bash
+
+    - name: Update values
       run: |
-        yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
+        yq --inplace '.image.tag = "${{ inputs.image_tag }}"' values.yaml
+        envsubst < values.yaml | sponge values.yaml
       working-directory: ${{ inputs.chart_path }}
       shell: bash
 
@@ -91,14 +101,31 @@ runs:
 
     - name: Helm Deploy
       run: |
-        cat ${{ inputs.chart_path }}/values.yaml | envsubst |\
         helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
-          --set image.tag=${{ inputs.image_tag }} \
           --wait=${{ inputs.wait }} \
           --wait-for-jobs=${{ inputs.wait_for_jobs }} \
-          --timeout=${{ inputs.timeout }} \
-          -f -
+          --timeout=${{ inputs.timeout }}
       shell: bash
       env:
         HOSTNAME: ${{ steps.hostname.outputs.value }}
+
+    ##### Prepare and attach Helm charts to release #####
+
+    - name: Build Template
+      if: github.ref_type == 'tag'
+      run: helm template --namespace ${{ steps.namespace.outputs.namespace }} ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}.yaml
+      shell: bash
+
+    - name: Build Package
+      if: github.ref_type == 'tag'
+      run: helm package ${{ inputs.chart_path }}
+      shell: bash
+
+    - name: Add to release
+      if: github.ref_type == 'tag'
+      run: gh release upload ${{ github.ref_name }} ${{ steps.repository.outputs.variable }}.yaml "${CHART_PATH##*/}-${{ steps.version.outputs.variable }}.tgz"
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        CHART_PATH: ${{ inputs.chart_path }}
+      shell: bash
