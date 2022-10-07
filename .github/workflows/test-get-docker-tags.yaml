@@ -1,0 +1,31 @@
+name: Test Get Docker Tags
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'get-docker-tags/**/*'
+      - '.github/workflows/test-get-docker-tags.yaml'
+
+jobs:
+  test-get-docker-tags:
+    name: Test Get Docker Tags
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Docker Tags
+        id: docker
+        uses: ./get-docker-tags
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Image Name: ${{ steps.docker.outputs.image_name }}'
+        run: echo "${{ steps.docker.outputs.image_name }}"
+
+      - name: 'Image Tag: ${{ steps.docker.outputs.image_tag }}'
+        run: echo "${{ steps.docker.outputs.image_tag }}"
+
+      - name: 'Tags'
+        run: echo "${{ steps.docker.outputs.tags }}"

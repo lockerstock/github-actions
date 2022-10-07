@@ -1,0 +1,66 @@
+name: Get Docker Tags
+description: Prepares Docker image tags for [docker/build-push-action](https://github.com/docker/build-push-action)
+
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  registry:
+    description: Registry domain that image should be pushed to.
+    required: false
+    default: ghcr.io
+
+  image_repo:
+    description: Repo of Docker image
+    required: false
+    default: ${{ github.repository }}
+
+outputs:
+  image_name:
+    description: Full image name used.
+    value: ${{ steps.image.outputs.name }}
+  image_tag:
+    description: Image tag used.
+    value: ${{ steps.environment.outputs.variable }}
+  tags:
+    description: Tags to input into [docker/build-push-action](https://github.com/docker/build-push-action)
+    value: ${{ steps.tags.outputs.tags }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Short Sha
+      id: short
+      uses: alehechka-io/kubernetes-actions/get-short-sha@main
+
+    - name: Image Name
+      id: image
+      run: echo "::set-output name=name::${{ inputs.registry }}/${{ inputs.image_repo }}"
+      shell: bash
+
+    - name: Determine Environment
+      id: environment
+      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      with:
+        token: ${{ inputs.token }}
+        production_variable: ${{ github.ref_name }}
+        staging_variable: ${{ steps.short.outputs.short_sha }}
+        development_variable: ${{ steps.short.outputs.short_sha }}
+
+    - name: Prepare Tags
+      id: tags
+      run: |
+        TAGS="${{ steps.image.outputs.name }}:${{ steps.short.outputs.short_sha }}"
+
+        if [ "${{ steps.environment.outputs.environment }}" = "production" ]; then
+          TAGS+=",${{ steps.image.outputs.name }}:latest"
+          TAGS+=",${{ steps.image.outputs.name }}:${{ github.ref_name }}"
+
+        elif [ "${{ steps.environment.outputs.environment }}" = "staging" ]; then
+          TAGS+=",${{ steps.image.outputs.name }}:staging"
+
+        fi
+
+        echo "::set-output name=tags::$TAGS"
+      shell: bash

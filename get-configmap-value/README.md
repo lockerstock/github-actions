@@ -24,7 +24,7 @@ jobs:
 
       - name: Get ConfigMap
         id: config_map
-        uses: ./get-configmap-value
+        uses: alehechka-io/kubernetes-actions/get-configmap-value@main
         with:
           config_map: 'my-configmap'
           variable: 'my-variable'
