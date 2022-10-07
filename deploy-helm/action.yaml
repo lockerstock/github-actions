@@ -80,6 +80,16 @@ runs:
         staging_variable: 'v0.0.0-${{ steps.short.outputs.short_sha }}'
         development_variable: 'v0.0.0-${{ steps.short.outputs.short_sha }}'
 
+    - name: Hostname
+      id: hostname
+      uses: alehechka-io/kubernetes-actions/get-configmap-value@main
+      with:
+        namespace: default
+        config_map: hostnames
+        variable: ${{ steps.version.outputs.environment }}
+      env:
+        NAMESPACE: ${{ steps.namespace.outputs.namespace }}
+
     - name: Update versions
       run: yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
       working-directory: ${{ inputs.chart_path }}
@@ -91,16 +101,8 @@ runs:
         envsubst < values.yaml | sponge values.yaml
       working-directory: ${{ inputs.chart_path }}
       shell: bash
-
-    - name: Hostname
-      id: hostname
-      uses: alehechka-io/kubernetes-actions/get-configmap-value@main
-      with:
-        namespace: default
-        config_map: hostnames
-        variable: ${{ steps.version.outputs.environment }}
       env:
-        NAMESPACE: ${{ steps.namespace.outputs.namespace }}
+        HOSTNAME: ${{ steps.hostname.outputs.value }}
 
     - name: Helm Deploy
       run: |
@@ -110,8 +112,6 @@ runs:
           --wait-for-jobs=${{ inputs.wait_for_jobs }} \
           --timeout=${{ inputs.timeout }}
       shell: bash
-      env:
-        HOSTNAME: ${{ steps.hostname.outputs.value }}
 
     ##### Prepare and attach Helm charts to release #####
 
