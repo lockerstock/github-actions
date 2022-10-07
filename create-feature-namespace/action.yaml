@@ -28,8 +28,19 @@ runs:
 
     - name: Create Feature Namespace
       if: steps.namespace.outputs.exists != 'true'
-      run: cat ${{ github.action_path }}/k8s/feature.namespace.yaml | envsubst | kubectl apply -f -
+      run: cat feature.namespace.yaml | envsubst | kubectl apply -f -
       env:
         NAMESPACE: ${{ steps.namespace.outputs.name }}
         REF_NAME: ${{ steps.namespace.outputs.ref }}
+      working-directory: ${{ github.action_path }}/k8s
+      shell: bash
+
+    - name: Append service label
+      run: |
+        if [[ $(kubectl get namespace -l ${{ github.repository_owner }}/feature-branch==${{ steps.namespace.outputs.name }} -o name) ]]; then
+          envsubst < service-label.patch.yaml | sponge service-label.patch.yaml
+
+          kubectl patch namespace '${{ steps.namespace.outputs.name }}' --patch-file service-label.patch.yaml
+        fi
+      working-directory: ${{ github.action_path }}/k8s
       shell: bash
