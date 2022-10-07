@@ -29,3 +29,6 @@ jobs:
 
       - name: 'Tags'
         run: echo "${{ steps.docker.outputs.tags }}"
+
+      - name: 'Environment: ${{ steps.docker.outputs.environment }}'
+        run: echo "${{ steps.docker.outputs.environment }}"

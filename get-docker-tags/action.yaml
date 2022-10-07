@@ -26,6 +26,9 @@ outputs:
   tags:
     description: Tags to input into [docker/build-push-action](https://github.com/docker/build-push-action)
     value: ${{ steps.tags.outputs.tags }}
+  environment:
+    description: Environment used to determine image tags
+    value: ${{ steps.environment.outputs.environment }}
 
 runs:
   using: 'composite'

@@ -61,6 +61,7 @@ jobs:
 | image_name | Full image name used. |
 | image_tag | Image tag used. |
 | tags | Tags to input into [docker/build-push-action](https://github.com/docker/build-push-action) |
+| environment | Environment used to determine image tags |
 
 
 
