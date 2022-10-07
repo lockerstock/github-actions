@@ -11,5 +11,14 @@ runs:
   steps:
     - name: Short Sha
       id: short
-      run: echo "::set-output name=sha::${GITHUB_SHA::7}"
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          SHA="${{ github.event.pull_request.head.sha }}"
+
+        else
+          SHA="${{ github.sha }}"
+          
+        fi
+
+        echo "::set-output name=sha::${SHA::7}"
       shell: bash

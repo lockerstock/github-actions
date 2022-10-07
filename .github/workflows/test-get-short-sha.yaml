@@ -1,0 +1,26 @@
+name: Test get-short-sha
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'get-short-sha/**/*'
+      - '.github/workflows/test-get-short-sha.yaml'
+
+jobs:
+  test-get-short-sha:
+    name: Test get short sha
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Short Sha
+        id: short
+        uses: ./get-short-sha
+
+      - name: 'Short Sha: ${{ steps.short.outputs.short_sha }}'
+        run: echo "${{ steps.short.outputs.short_sha }}"
