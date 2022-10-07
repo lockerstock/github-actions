@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Docker Tags
         id: docker
-        uses:
+        uses: alehechka-io/kubernetes-actions/get-docker-tags@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
