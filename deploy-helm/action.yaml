@@ -47,6 +47,10 @@ outputs:
     description: 'Hostname provided to deployed Helm chart'
     value: ${{ steps.hostname.outputs.value }}
 
+  environment:
+    description: Environment used to deploy Helm chart
+    value: ${{ steps.version.outputs.environment }}
+
 runs:
   using: composite
   steps:
@@ -83,7 +87,7 @@ runs:
 
     - name: Update values
       run: |
-        yq --inplace '.image.tag = "${{ inputs.image_tag }}"' values.yaml
+        yq --inplace '.image.tag = "${{ inputs.image_tag }}", .environment = "${{ steps.version.outputs.environment }}"' values.yaml
         envsubst < values.yaml | sponge values.yaml
       working-directory: ${{ inputs.chart_path }}
       shell: bash

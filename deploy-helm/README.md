@@ -55,6 +55,7 @@ jobs:
 | namespace | Name of Namespace that was deployed to. |
 | chart_version | Version of the Helm chart that was deployed |
 | hostname | Hostname provided to deployed Helm chart |
+| environment | Environment used to deploy Helm chart |
 
 
 

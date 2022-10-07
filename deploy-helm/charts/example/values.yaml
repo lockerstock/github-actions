@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+environment: local
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
