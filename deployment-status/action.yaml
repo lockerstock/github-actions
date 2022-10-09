@@ -64,4 +64,4 @@ runs:
         env_url: ${{ inputs.env_url }}
         ref: ${{ steps.ref.outputs.name }}
         deployment_id: ${{ steps.deployment.outputs.id }}
-        status: ${{ job.status }}
+        status: ${{ inputs.status }}
