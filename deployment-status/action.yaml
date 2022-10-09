@@ -65,3 +65,4 @@ runs:
         ref: ${{ steps.ref.outputs.name }}
         deployment_id: ${{ steps.deployment.outputs.id }}
         status: ${{ inputs.status }}
+        auto_inactive: ${{ inputs.environment == 'staging' || inputs.environment == 'production' }}
