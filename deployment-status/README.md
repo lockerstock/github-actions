@@ -42,6 +42,7 @@ jobs:
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
           step: finish
           env_url: https://example.com
+          environment: ${{ steps.env.outputs.environment }}
 ```
 
 ### Deactivate Deployment
