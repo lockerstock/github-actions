@@ -1,0 +1,35 @@
+name: Test deployment-status
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'deployment-status/**/*'
+      - '.github/workflows/test-deployment-status.yaml'
+
+jobs:
+  test-deployment-status:
+    name: Test deployment-status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Start Deployment
+        id: deployment
+        uses: ./deployment-status
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          step: start
+
+      - name: Finish Deployment
+        uses: ./deployment-status
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          step: finish
+          env_url: https://example.com

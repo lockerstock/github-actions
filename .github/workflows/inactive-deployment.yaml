@@ -1,0 +1,19 @@
+name: Inactive Deployment
+on:
+  - delete
+
+jobs:
+  inactive-deployment:
+    name: Invactive Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Finish Deployment
+        uses: ./deployment-status
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          step: finish
+          status: inactive
