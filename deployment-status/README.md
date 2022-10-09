@@ -8,10 +8,15 @@ Automatically updates the most recent deployment with proper status
 
 ## Example Usage
 
+### Update/Create Deployment
+
 ```yaml
 name: Deployment Status
 on:
-  - pull_request
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   deployment:
@@ -23,8 +28,9 @@ jobs:
         id: deployment
         uses: alehechka-io/kubernetes-actions/deployment-status@main
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           step: start
+          environment: ${{ steps.env.outputs.environment }}
 
       # deployment steps...
 
@@ -32,10 +38,31 @@ jobs:
         uses: alehechka-io/kubernetes-actions/deployment-status@main
         if: always()
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
           step: finish
           env_url: https://example.com
+```
+
+### Deactivate Deployment
+
+```yaml
+name: Cleanup Deleted Branch
+on:
+  - delete
+
+jobs:
+  cleanup-deleted-branch:
+    name: Cleanup Deleted Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deactivate Deployment
+        uses: alehechka-io/kubernetes-actions/deployment-status@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          step: finish
+          status: inactive
 ```
 
 <!-- action-docs-inputs -->
