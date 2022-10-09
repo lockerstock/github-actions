@@ -6,12 +6,6 @@
 name: Check dist/
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'determine-environment/**/*'
-      - '.github/workflows/check-dist.yaml'
   pull_request:
     paths:
       - 'determine-environment/**/*'
