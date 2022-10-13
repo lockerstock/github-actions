@@ -30,3 +30,4 @@ jobs:
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
           step: finish
           env_url: https://example.com
+          auto_inactive: 'true'

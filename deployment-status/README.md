@@ -62,7 +62,7 @@ jobs:
         uses: alehechka-io/kubernetes-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          step: delete-env
+          step: deactivate-env
 ```
 
 <!-- action-docs-inputs -->
@@ -76,6 +76,7 @@ jobs:
 | step | One of 'start', 'finish', 'deactivate-env', or 'delete-env' | `true` |  |
 | status | The deployment status (for `finish` only) | `false` | ${{ job.status }} |
 | env_url | The environment URL (for `finish` only) | `false` |  |
+| auto_inactive | Whether to mark existing deployments as inactive if a deployment succeeds (for `finish` only) | `false` | false |
 
 
 

@@ -15,4 +15,4 @@ jobs:
         uses: ./deployment-status
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          step: delete-env
+          step: deactivate-env

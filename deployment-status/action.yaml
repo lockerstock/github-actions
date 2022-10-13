@@ -6,6 +6,11 @@ inputs:
     description: 'Deployment ID of previous deployment to update'
     required: false
 
+  environment:
+    description: 'Environment of Deployment'
+    required: false
+    default: development
+
   token:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
     required: false
@@ -23,13 +28,15 @@ inputs:
     required: false
     description: The environment URL (for `finish` only)
 
+  auto_inactive:
+    description: Whether to mark existing deployments as inactive if a deployment succeeds (for `finish` only)
+    default: 'false'
+    required: false
+
 outputs:
   deployment_id:
     description: 'Deployment ID of deployment updated or created'
     value: ${{ steps.deployment.outputs.deployment_id }}
-  environment:
-    description: 'Deployment environment'
-    value: ${{ steps.environment.outputs.variable }}
 
 runs:
   using: 'composite'
@@ -38,24 +45,15 @@ runs:
       id: ref
       uses: alehechka-io/kubernetes-actions/get-ref@main
 
-    - name: Get Environment
-      id: environment
-      uses: alehechka-io/kubernetes-actions/determine-environment@main
-      with:
-        token: ${{ inputs.token }}
-        production_variable: 'production'
-        staging_variable: 'staging'
-        development_variable: '${{ steps.ref.outputs.name }}'
-
     - name: Deployment Status
       id: deployment
       uses: bobheadxi/deployments@v1
       with:
         token: ${{ inputs.token }}
         step: ${{ inputs.step }}
-        env: ${{ steps.environment.outputs.variable }}
+        env: ${{ inputs.environment }}
         env_url: ${{ inputs.env_url }}
         ref: ${{ steps.ref.outputs.name }}
         deployment_id: ${{ inputs.deployment_id }}
         status: ${{ inputs.status }}
-        auto_inactive: true
+        auto_inactive: ${{ inputs.auto_inactive }}
