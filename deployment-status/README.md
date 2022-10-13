@@ -62,8 +62,7 @@ jobs:
         uses: alehechka-io/kubernetes-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          step: finish
-          status: inactive
+          step: delete-env
 ```
 
 <!-- action-docs-inputs -->

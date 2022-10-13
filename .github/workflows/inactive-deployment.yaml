@@ -15,5 +15,4 @@ jobs:
         uses: ./deployment-status
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          step: finish
-          status: inactive
+          step: delete-env

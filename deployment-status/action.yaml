@@ -6,11 +6,6 @@ inputs:
     description: 'Deployment ID of previous deployment to update'
     required: false
 
-  environment:
-    description: 'Environment of Deployment'
-    required: false
-    default: development
-
   token:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
     required: false
@@ -31,7 +26,10 @@ inputs:
 outputs:
   deployment_id:
     description: 'Deployment ID of deployment updated or created'
-    value: ${{ steps.deployment.outputs.id }}
+    value: ${{ steps.deployment.outputs.deployment_id }}
+  environment:
+    description: 'Deployment environment'
+    value: ${{ steps.environment.outputs.variable }}
 
 runs:
   using: 'composite'
@@ -40,29 +38,24 @@ runs:
       id: ref
       uses: alehechka-io/kubernetes-actions/get-ref@main
 
-    - name: Find previous deployment
-      id: deployment
-      run: |
-        if [[ -n "${{ inputs.deployment_id }}" ]]; then
-          echo "::set-output name=id::${{ inputs.deployment_id }}"
-
-        else
-          PREV_DEPLOY=$(gh api "/repos/${{ github.repository }}/deployments?ref=${{ steps.ref.outputs.name }}&per_page=1&environment=${{ inputs.environment }}" | jq '.[0].id // empty')
-          echo "::set-output name=id::$PREV_DEPLOY"
-
-        fi
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ inputs.token }}
+    - name: Get Environment
+      id: environment
+      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      with:
+        token: ${{ inputs.token }}
+        production_variable: 'production'
+        staging_variable: 'staging'
+        development_variable: '${{ steps.ref.outputs.name }}'
 
     - name: Deployment Status
+      id: deployment
       uses: bobheadxi/deployments@v1
       with:
         token: ${{ inputs.token }}
         step: ${{ inputs.step }}
-        env: ${{ inputs.environment }}
+        env: ${{ steps.environment.outputs.variable }}
         env_url: ${{ inputs.env_url }}
         ref: ${{ steps.ref.outputs.name }}
-        deployment_id: ${{ steps.deployment.outputs.id }}
+        deployment_id: ${{ inputs.deployment_id }}
         status: ${{ inputs.status }}
-        auto_inactive: ${{ inputs.environment == 'staging' || inputs.environment == 'production' }}
+        auto_inactive: true
