@@ -44,7 +44,7 @@ runs:
 
     - name: Remove Namespace label
       if: steps.namespace.outputs.exists == 'true'
-      run: kubectl label namespace ${{ github.repository }}-
+      run: kubectl label namespace ${{ steps.namespace.outputs.name }} ${{ github.repository }}-
       shell: bash
 
     - name: Get Helm Secrets
