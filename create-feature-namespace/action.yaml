@@ -38,9 +38,7 @@ runs:
     - name: Append service label
       run: |
         if [[ $(kubectl get namespace -l ${{ github.repository_owner }}/feature-branch==${{ steps.namespace.outputs.name }} -o name) ]]; then
-          envsubst < service-label.patch.yaml | sponge service-label.patch.yaml
-
-          kubectl patch namespace '${{ steps.namespace.outputs.name }}' --patch-file service-label.patch.yaml
+          kubectl label namespace ${{ steps.namespace.outputs.name }} ${{ github.repository }}=''
         fi
       working-directory: ${{ github.action_path }}/k8s
       shell: bash
