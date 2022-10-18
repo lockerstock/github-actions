@@ -8,7 +8,8 @@ inputs:
 
   chart_path:
     description: 'Path to Helm chart'
-    required: true
+    required: false
+    default: deploy/helm/${{ github.event.repository.name }}
 
   image_tag:
     description: 'Tag of Docker image'
