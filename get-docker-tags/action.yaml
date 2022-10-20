@@ -39,7 +39,7 @@ runs:
 
     - name: Image Name
       id: image
-      run: echo "::set-output name=name::${{ inputs.registry }}/${{ inputs.image_repo }}"
+      run: echo "name=${{ inputs.registry }}/${{ inputs.image_repo }}" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Determine Environment
@@ -65,5 +65,5 @@ runs:
 
         fi
 
-        echo "::set-output name=tags::$TAGS"
+        echo "tags=$TAGS" >> $GITHUB_OUTPUT
       shell: bash

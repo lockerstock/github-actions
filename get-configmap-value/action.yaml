@@ -33,5 +33,5 @@ runs:
           | jq -r '.data.${{ inputs.variable }}' \
           | envsubst)
 
-        echo "::set-output name=value::$VALUE"
+        echo "value=$VALUE" >> $GITHUB_OUTPUT
       shell: bash

@@ -20,5 +20,5 @@ runs:
           
         fi
 
-        echo "::set-output name=sha::${SHA::7}"
+        echo "sha=${SHA::7}" >> $GITHUB_OUTPUT
       shell: bash

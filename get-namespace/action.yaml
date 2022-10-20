@@ -62,10 +62,10 @@ runs:
       id: exists
       run: |
         if [ -n '${{ steps.namespace-json.outputs.value }}' ]; then
-          echo "::set-output name=exists::true"
+          echo "exists=true" >> $GITHUB_OUTPUT
 
         else
-          echo "::set-output name=exists::false"
+          echo "exists=false" >> $GITHUB_OUTPUT
 
         fi
       shell: bash

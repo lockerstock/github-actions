@@ -23,7 +23,7 @@ NO_LEAD_TRAIL_DASHES=$(echo $ALPHANUMERIC | sed 's/^-\+//' | sed 's/-\+$//')
 OUTPUT=${NO_LEAD_TRAIL_DASHES:0:63}
 
 if [ -n "$VAR_NAME" ]; then
-    echo "::set-output name=$VAR_NAME::$OUTPUT"
+    echo "$VAR_NAME=$OUTPUT" >> $GITHUB_OUTPUT
 else
     echo $OUTPUT
 fi

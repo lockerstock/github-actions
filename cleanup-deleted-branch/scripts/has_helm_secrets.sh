@@ -10,7 +10,7 @@ if [[ $(kubectl get secrets --namespace $NAMESPACE -o name | grep sh.helm.releas
 fi
 
 if [ -n "$VAR_NAME" ]; then
-    echo "::set-output name=$VAR_NAME::$OUTPUT"
+    echo "$VAR_NAME=$OUTPUT" >> $GITHUB_OUTPUT
 else
     echo $OUTPUT
 fi
