@@ -36,6 +36,7 @@ runs:
       shell: bash
 
     - name: Append service label
+      if: steps.namespace.outputs.exists == 'true'
       run: |
         if [[ $(kubectl get namespace -l ${{ github.repository_owner }}/feature-branch==${{ steps.namespace.outputs.name }} -o name) ]]; then
           kubectl label namespace ${{ steps.namespace.outputs.name }} ${{ github.repository }}=''

@@ -4,6 +4,7 @@ metadata:
   name: $NAMESPACE
   labels:
     $GITHUB_REPOSITORY_OWNER/feature-branch: $NAMESPACE
+    $GITHUB_REPOSITORY: ''
   annotations:
     $GITHUB_REPOSITORY_OWNER/feature-branch: $REF_NAME
     $GITHUB_REPOSITORY_OWNER/feature-service: $GITHUB_REPOSITORY
