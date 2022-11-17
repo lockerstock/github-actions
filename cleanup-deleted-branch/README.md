@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
-
 ## Description
 
 Cleans up resources deployed to feature branch upon branch deletion
+
 
 <!-- action-docs-description -->
 
@@ -27,14 +27,15 @@ jobs:
 ```
 
 <!-- action-docs-inputs -->
-
 ## Inputs
 
-| parameter | description                                                        | required | default |
-| --------- | ------------------------------------------------------------------ | -------- | ------- |
-| token     | GITHUB_TOKEN to access the GitHub API if the repository is private | `false`  |         |
-| wait      | Flag to have Helm deploy wait for resources to finish deploying    | `false`  | false   |
-| timeout   | Sets time to wait for Kubernetes operations                        | `false`  | 5m0s    |
+| parameter | description | required | default |
+| - | - | - | - |
+| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
+| wait | Flag to have Helm deploy wait for resources to finish deploying | `false` | false |
+| timeout | Sets time to wait for Kubernetes operations | `false` | 5m0s |
+
+
 
 <!-- action-docs-inputs -->
 
@@ -43,9 +44,9 @@ jobs:
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
-
 ## Runs
 
 This action is a `composite` action.
+
 
 <!-- action-docs-runs -->

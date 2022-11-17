@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
-
 ## Description
 
 Sanitizes given variable for use as K8S resource and/or subdomain
+
 
 <!-- action-docs-description -->
 
@@ -27,29 +27,31 @@ jobs:
 ```
 
 <!-- action-docs-inputs -->
-
 ## Inputs
 
-| parameter | description          | required | default |
-| --------- | -------------------- | -------- | ------- |
-| variable  | Variable to sanitize | `true`   |         |
+| parameter | description | required | default |
+| - | - | - | - |
+| variable | Variable to sanitize | `true` |  |
+
+
 
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
-
 ## Outputs
 
-| parameter | description        |
-| --------- | ------------------ |
-| variable  | Sanitized variable |
+| parameter | description |
+| - | - |
+| variable | Sanitized variable |
+
+
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
-
 ## Runs
 
 This action is a `composite` action.
+
 
 <!-- action-docs-runs -->

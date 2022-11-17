@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
-
 ## Description
 
 Truncates the commit sha to the first 7 digits
+
 
 <!-- action-docs-description -->
 
@@ -32,19 +32,20 @@ jobs:
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
-
 ## Outputs
 
-| parameter | description   |
-| --------- | ------------- |
+| parameter | description |
+| - | - |
 | short_sha | Shortened Sha |
+
+
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
-
 ## Runs
 
 This action is a `composite` action.
+
 
 <!-- action-docs-runs -->
