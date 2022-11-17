@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Start Deployment
         id: deployment
-        uses: alehechka-io/kubernetes-actions/deployment-status@main
+        uses: lockerstock/kubernetes-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           step: start
@@ -35,7 +35,7 @@ jobs:
       # deployment steps...
 
       - name: Finish Deployment
-        uses: alehechka-io/kubernetes-actions/deployment-status@main
+        uses: lockerstock/kubernetes-actions/deployment-status@main
         if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Deactivate Deployment
-        uses: alehechka-io/kubernetes-actions/deployment-status@main
+        uses: lockerstock/kubernetes-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           step: deactivate-env

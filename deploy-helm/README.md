@@ -24,7 +24,7 @@ jobs:
 
       - name: Helm deploy
         id: deploy
-        uses: alehechka-io/kubernetes-actions/deploy-helm
+        uses: lockerstock/kubernetes-actions/deploy-helm
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           chart_path: deploy-helm/charts/example
@@ -36,7 +36,7 @@ jobs:
 | parameter | description | required | default |
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
-| chart_path | Path to Helm chart | `true` |  |
+| chart_path | Path to Helm chart | `false` | deploy/helm/${{ github.event.repository.name }} |
 | image_tag | Tag of Docker image | `false` | latest |
 | namespace | Namespace to deploy Helm chart. If not provided, will be calculated from action trigger | `false` |  |
 | wait | Flag to have Helm deploy wait for resources to finish deploying | `false` | false |

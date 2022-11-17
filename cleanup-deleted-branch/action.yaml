@@ -21,13 +21,13 @@ runs:
   steps:
     - name: Get Repository Name
       id: repository
-      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      uses: lockerstock/kubernetes-actions/clean-variable@main
       with:
         variable: ${{ github.repository }}
 
     - name: Get Namespace
       id: namespace
-      uses: alehechka-io/kubernetes-actions/get-namespace@main
+      uses: lockerstock/kubernetes-actions/get-namespace@main
       with:
         token: ${{ inputs.token }}
         get_namespace: 'true'

@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Get Environment
         id: environment
-        uses: alehechka-io/kubernetes-actions/determine-environment@main
+        uses: lockerstock/kubernetes-actions/determine-environment@main
         with:
           token: ${{ inputs.token }}
           production_variable: 'prod'

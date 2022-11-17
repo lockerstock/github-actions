@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Short Sha
         id: short
-        uses: alehechka-io/kubernetes-actions/get-short-sha@main
+        uses: lockerstock/kubernetes-actions/get-short-sha@main
 
       - name: 'Short Sha: ${{ steps.short.outputs.short_sha }}'
         run: echo "${{ steps.short.outputs.short_sha }}"

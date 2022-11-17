@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alehechka-io/kubernetes-actions/determine-environment.git"
+    "url": "git+https://github.com/lockerstock/kubernetes-actions/determine-environment.git"
   },
   "keywords": [
     "actions",
