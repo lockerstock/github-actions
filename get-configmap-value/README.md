@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
+
 ## Description
 
 Retrieves a variable from a ConfigMap in Kubernetes cluster
-
 
 <!-- action-docs-description -->
 
@@ -24,7 +24,7 @@ jobs:
 
       - name: Get ConfigMap
         id: config_map
-        uses: alehechka-io/kubernetes-actions/get-configmap-value@main
+        uses: lockerstock/kubernetes-actions/get-configmap-value@main
         with:
           config_map: 'my-configmap'
           variable: 'my-variable'
@@ -38,33 +38,31 @@ jobs:
 > Any variable supplied to `env` will be substituted into the returned value via `envsubst`
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| variable | Variable in the ConfigMap "data" to retrieve | `true` |  |
-| namespace | Namespace of ConfigMap | `false` | default |
-| config_map | Name of ConfigMap | `true` |  |
-
-
+| parameter  | description                                  | required | default |
+| ---------- | -------------------------------------------- | -------- | ------- |
+| variable   | Variable in the ConfigMap "data" to retrieve | `true`   |         |
+| namespace  | Namespace of ConfigMap                       | `false`  | default |
+| config_map | Name of ConfigMap                            | `true`   |         |
 
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
 ## Outputs
 
-| parameter | description |
-| - | - |
-| value | Value found in ConfigMap |
-
-
+| parameter | description              |
+| --------- | ------------------------ |
+| value     | Value found in ConfigMap |
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `composite` action.
-
 
 <!-- action-docs-runs -->

@@ -57,24 +57,24 @@ runs:
   steps:
     - name: Create Namespace
       id: namespace
-      uses: alehechka-io/kubernetes-actions/create-feature-namespace@main
+      uses: lockerstock/kubernetes-actions/create-feature-namespace@main
       with:
         namespace: ${{ inputs.namespace }}
         token: ${{ inputs.token }}
 
     - name: Get Repository Name
       id: repository
-      uses: alehechka-io/kubernetes-actions/clean-variable@main
+      uses: lockerstock/kubernetes-actions/clean-variable@main
       with:
         variable: ${{ github.repository }}
 
     - name: Short Sha
       id: short
-      uses: alehechka-io/kubernetes-actions/get-short-sha@main
+      uses: lockerstock/kubernetes-actions/get-short-sha@main
 
     - name: Version
       id: version
-      uses: alehechka-io/kubernetes-actions/determine-environment@main
+      uses: lockerstock/kubernetes-actions/determine-environment@main
       with:
         token: ${{ inputs.token }}
         production_variable: ${{ github.ref_name }}
@@ -83,7 +83,7 @@ runs:
 
     - name: Hostname
       id: hostname
-      uses: alehechka-io/kubernetes-actions/get-configmap-value@main
+      uses: lockerstock/kubernetes-actions/get-configmap-value@main
       with:
         namespace: default
         config_map: hostnames

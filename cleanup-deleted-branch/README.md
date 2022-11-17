@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
+
 ## Description
 
 Cleans up resources deployed to feature branch upon branch deletion
-
 
 <!-- action-docs-description -->
 
@@ -21,21 +21,20 @@ jobs:
     steps:
       - name: Cleanup Deleted Branch
         id: environment
-        uses: alehechka-io/kubernetes-actions/cleanup-deleted-branch@main
+        uses: lockerstock/kubernetes-actions/cleanup-deleted-branch@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
-| wait | Flag to have Helm deploy wait for resources to finish deploying | `false` | false |
-| timeout | Sets time to wait for Kubernetes operations | `false` | 5m0s |
-
-
+| parameter | description                                                        | required | default |
+| --------- | ------------------------------------------------------------------ | -------- | ------- |
+| token     | GITHUB_TOKEN to access the GitHub API if the repository is private | `false`  |         |
+| wait      | Flag to have Helm deploy wait for resources to finish deploying    | `false`  | false   |
+| timeout   | Sets time to wait for Kubernetes operations                        | `false`  | 5m0s    |
 
 <!-- action-docs-inputs -->
 
@@ -44,9 +43,9 @@ jobs:
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `composite` action.
-
 
 <!-- action-docs-runs -->

@@ -9,14 +9,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alehechka-io/kubernetes-actions.git"
+		"url": "git+https://github.com/lockerstock/kubernetes-actions.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/alehechka-io/kubernetes-actions/issues"
+		"url": "https://github.com/lockerstock/kubernetes-actions/issues"
 	},
-	"homepage": "https://github.com/alehechka-io/kubernetes-actions#readme",
+	"homepage": "https://github.com/lockerstock/kubernetes-actions#readme",
 	"devDependencies": {
 		"@types/node": "^18.8.1",
 		"action-docs": "^1.0.4",

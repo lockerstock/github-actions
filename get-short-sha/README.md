@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
+
 ## Description
 
 Truncates the commit sha to the first 7 digits
-
 
 <!-- action-docs-description -->
 
@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Short Sha
         id: short
-        uses: alehechka-io/kubernetes-actions/get-short-sha@main
+        uses: lockerstock/kubernetes-actions/get-short-sha@main
 
       - name: 'Short Sha: ${{ steps.short.outputs.short_sha }}'
         run: echo "${{ steps.short.outputs.short_sha }}"
@@ -32,20 +32,19 @@ jobs:
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
 ## Outputs
 
-| parameter | description |
-| - | - |
+| parameter | description   |
+| --------- | ------------- |
 | short_sha | Shortened Sha |
-
-
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `composite` action.
-
 
 <!-- action-docs-runs -->

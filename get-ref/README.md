@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
+
 ## Description
 
 Will retrieve the acting ref name regardless of trigger
-
 
 <!-- action-docs-description -->
 
@@ -21,35 +21,33 @@ jobs:
     steps:
       - name: Get Ref
         id: ref
-        uses: alehechka-io/kubernetes-actions/get-ref@main
+        uses: lockerstock/kubernetes-actions/get-ref@main
 ```
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| custom_ref | Custom Ref Name Override | `false` |  |
-
-
+| parameter  | description              | required | default |
+| ---------- | ------------------------ | -------- | ------- |
+| custom_ref | Custom Ref Name Override | `false`  |         |
 
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
 ## Outputs
 
-| parameter | description |
-| - | - |
-| name | Ref Name of triggering ref |
-
-
+| parameter | description                |
+| --------- | -------------------------- |
+| name      | Ref Name of triggering ref |
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `composite` action.
-
 
 <!-- action-docs-runs -->

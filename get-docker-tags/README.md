@@ -1,8 +1,8 @@
 <!-- action-docs-description -->
+
 ## Description
 
 Prepares Docker image tags for [docker/build-push-action](https://github.com/docker/build-push-action)
-
 
 <!-- action-docs-description -->
 
@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Docker Tags
         id: docker
-        uses: alehechka-io/kubernetes-actions/get-docker-tags@main
+        uses: lockerstock/kubernetes-actions/get-docker-tags@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -41,36 +41,34 @@ jobs:
 > Any variable supplied to `env` will be substituted into the returned value via `envsubst`
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
-| registry | Registry domain that image should be pushed to. | `false` | ghcr.io |
-| image_repo | Repo of Docker image | `false` | ${{ github.repository }} |
-
-
+| parameter  | description                                                        | required | default                  |
+| ---------- | ------------------------------------------------------------------ | -------- | ------------------------ |
+| token      | GITHUB_TOKEN to access the GitHub API if the repository is private | `false`  |                          |
+| registry   | Registry domain that image should be pushed to.                    | `false`  | ghcr.io                  |
+| image_repo | Repo of Docker image                                               | `false`  | ${{ github.repository }} |
 
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
 ## Outputs
 
-| parameter | description |
-| - | - |
-| image_name | Full image name used. |
-| image_tag | Image tag used. |
-| tags | Tags to input into [docker/build-push-action](https://github.com/docker/build-push-action) |
-| environment | Environment used to determine image tags |
-
-
+| parameter   | description                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| image_name  | Full image name used.                                                                      |
+| image_tag   | Image tag used.                                                                            |
+| tags        | Tags to input into [docker/build-push-action](https://github.com/docker/build-push-action) |
+| environment | Environment used to determine image tags                                                   |
 
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `composite` action.
-
 
 <!-- action-docs-runs -->
