@@ -13,8 +13,8 @@ on:
         required: true
 
 jobs:
-  pr-buf:
-    name: Pull Request Buf Verification
+  verify-buf:
+    name: Buf Verification
     runs-on: ubuntu-latest
 
     steps:
@@ -58,8 +58,8 @@ jobs:
           fi
         id: diff
 
-  pr-go:
-    name: Pull Request Go Verification
+  verify-go:
+    name: Go Verification
     runs-on: ubuntu-latest
 
     steps:
