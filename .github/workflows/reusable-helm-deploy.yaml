@@ -57,11 +57,11 @@ jobs:
           tags: ${{ steps.docker.outputs.tags }}
           platforms: linux/amd64,linux/arm64
           labels: |
-            org.opencontainers.image.source="${{ github.server_url }}/${{ github.repository }}"
-            org.opencontainers.image.authors="${{ github.repository_owner }},${{ github.actor }}"
-            org.opencontainers.image.version="${{ steps.docker.outputs.image_tag }}"
-            org.opencontainers.image.ref.name="${{ github.head_ref || github.ref_name }}"
-            org.opencontainers.image.environment="${{ steps.docker.outputs.environment }}"
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.authors=${{ github.repository_owner }},${{ github.actor }}
+            org.opencontainers.image.version=${{ steps.docker.outputs.image_tag }}
+            org.opencontainers.image.ref.name=${{ github.head_ref || github.ref_name }}
+            org.opencontainers.image.environment=${{ steps.docker.outputs.environment }}
           build-args: |
             RELEASE_VERSION=${{ steps.docker.outputs.image_tag }}
             ACTOR=${{ secrets.GHA_ACCESS_USER }}
