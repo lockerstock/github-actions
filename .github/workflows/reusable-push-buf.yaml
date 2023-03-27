@@ -1,0 +1,27 @@
+name: Push Buf Resources
+
+on:
+  workflow_call:
+    secrets:
+      BUF_TOKEN:
+        required: true
+
+jobs:
+  push-buf:
+    name: Push Buf Resources
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup buf CLI
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Buf Tag
+        run: buf push --tag ${{ github.sha }}
+        working-directory: proto/api
+        env:
+          BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
