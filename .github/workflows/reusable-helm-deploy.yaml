@@ -62,6 +62,7 @@ jobs:
             "org.opencontainers.image.version=${{ steps.docker.outputs.image_tag }}"
             "org.opencontainers.image.ref.name=${{ github.head_ref || github.ref_name }}"
             "org.opencontainers.image.environment=${{ steps.docker.outputs.environment }}"
+            "org.opencontainers.image.sha=${{ github.sha }}"
           build-args: |
             RELEASE_VERSION=${{ steps.docker.outputs.image_tag }}
             ACTOR=${{ secrets.GHA_ACCESS_USER }}
