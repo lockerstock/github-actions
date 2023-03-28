@@ -2,6 +2,8 @@
 ## Description
 
 Deletes all inactive GitHub deployments from a given environment.
+
+
 <!-- action-docs-description -->
 
 ## Example Usage
@@ -41,10 +43,13 @@ jobs:
 ## Inputs
 
 | parameter | description | required | default |
-| --- | --- | --- | --- |
+| - | - | - | - |
 | environment | Environment to delete inactive deployments from. | `true` |  |
 | token | GITHUB_TOKEN | `true` |  |
 | ref | Specific ref to delete deployments from. Leaving blank will delete all deployments for given environment. | `false` |  |
+
+
+
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
@@ -55,4 +60,6 @@ jobs:
 ## Runs
 
 This action is a `node16` action.
+
+
 <!-- action-docs-runs -->
