@@ -52,4 +52,4 @@ jobs:
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
         with:
           name: ${{ matrix.path }}/dist
-          path: ${{ matrix.path }}/dist/
+          path: ${{ matrix.path }}/dist
