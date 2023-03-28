@@ -1,0 +1,19 @@
+name: Test delete-inactive-deployments
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'delete-inactive-deployments/**/*'
+      - '.github/workflows/test-delete-inactive-deployments.yaml'
+
+jobs:
+  test-delete-inactive-deployments:
+    name: Test delete-inactive-deployments
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./delete-inactive-deployments
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: development

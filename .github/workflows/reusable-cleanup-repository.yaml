@@ -16,7 +16,7 @@ jobs:
           - production
 
     steps:
-      - uses: lockerstock/delete-inactive-deployments@main
+      - uses: lockerstock/github-actions/delete-inactive-deployments@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: ${{ matrix.environment }}
