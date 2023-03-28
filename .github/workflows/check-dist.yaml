@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        path: ['determine-environment']
+        path: ['determine-environment', 'delete-inactive-deployments']
 
     steps:
       - uses: actions/checkout@v2
