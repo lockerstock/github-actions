@@ -68,6 +68,8 @@ jobs:
 
       - name: Setup Go
         uses: actions/setup-go@v4
+        with:
+          cache: false
 
       - name: Setup Private Modules
         run: git config --global url."https://${{ secrets.GHA_ACCESS_USER }}:${{ secrets.GHA_ACCESS_TOKEN }}@github.com".insteadOf "https://github.com"
