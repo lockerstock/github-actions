@@ -38,13 +38,13 @@ jobs:
 
       - name: Get Docker Tags
         id: docker
-        uses: lockerstock/kubernetes-actions/get-docker-tags@main
+        uses: lockerstock/github-actions/get-docker-tags@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Deployment
         id: deployment
-        uses: lockerstock/kubernetes-actions/deployment-status@main
+        uses: lockerstock/github-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           step: start
@@ -87,14 +87,14 @@ jobs:
 
       - name: Helm deploy
         id: deploy
-        uses: lockerstock/kubernetes-actions/deploy-helm@main
+        uses: lockerstock/github-actions/deploy-helm@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
           chart_path: deployments/helm/${{ github.event.repository.name }}
 
       - name: Finish Deployment
-        uses: lockerstock/kubernetes-actions/deployment-status@main
+        uses: lockerstock/github-actions/deployment-status@main
         if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Cleanup Deleted Branch
         id: environment
-        uses: lockerstock/kubernetes-actions/cleanup-deleted-branch@main
+        uses: lockerstock/github-actions/cleanup-deleted-branch@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```

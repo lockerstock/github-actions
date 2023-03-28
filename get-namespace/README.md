@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Get Namespace
         id: namespace
-        uses: lockerstock/kubernetes-actions/get-namespace@main
+        uses: lockerstock/github-actions/get-namespace@main
         with:
           token: ${{ inputs.token }}
           get_namespace: 'true'

@@ -27,15 +27,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: yarn
-          cache-dependency-path: ${{ matrix.path }}/yarn.lock
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: yarn install --prefer-offline --frozen-lockfile
-        working-directory: ${{ matrix.path }}
+        run: npm install --prefer-offline --frozen-lockfile
 
       - name: Rebuild the dist/ directory
-        run: yarn all
+        run: npm run all
         working-directory: ${{ matrix.path }}
 
       - name: Compare the expected and actual dist/ directories

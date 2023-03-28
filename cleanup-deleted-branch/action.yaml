@@ -21,13 +21,13 @@ runs:
   steps:
     - name: Get Repository Name
       id: repository
-      uses: lockerstock/kubernetes-actions/clean-variable@main
+      uses: lockerstock/github-actions/clean-variable@main
       with:
         variable: ${{ github.repository }}
 
     - name: Get Namespace
       id: namespace
-      uses: lockerstock/kubernetes-actions/get-namespace@main
+      uses: lockerstock/github-actions/get-namespace@main
       with:
         token: ${{ inputs.token }}
         get_namespace: 'true'

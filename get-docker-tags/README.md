@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Docker Tags
         id: docker
-        uses: lockerstock/kubernetes-actions/get-docker-tags@main
+        uses: lockerstock/github-actions/get-docker-tags@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 

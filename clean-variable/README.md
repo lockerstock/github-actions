@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Sanitize Variable
         id: sanitized
-        uses: lockerstock/kubernetes-actions/clean-variable@main
+        uses: lockerstock/github-actions/clean-variable@main
         with:
           variable: ${{ github.ref_name }}
 ```
