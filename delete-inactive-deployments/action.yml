@@ -1,0 +1,18 @@
+name: 'Delete Inactive Deployments'
+description: 'Deletes all inactive GitHub deployments from a given environment.'
+author: 'lockerstock'
+
+inputs:
+  environment:
+    required: true
+    description: 'Environment to delete inactive deployments from.'
+  token:
+    required: true
+    description: 'GITHUB_TOKEN'
+  ref:
+    required: false
+    description: 'Specific ref to delete deployments from. Leaving blank will delete all deployments for given environment.'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

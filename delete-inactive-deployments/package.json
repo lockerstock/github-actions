@@ -1,0 +1,37 @@
+{
+	"name": "typescript-action",
+	"version": "0.0.0",
+	"private": true,
+	"description": "TypeScript template action",
+	"main": "src/main.ts",
+	"scripts": {
+		"execute": "ts-node src/main.ts",
+		"format": "prettier --write '**/*.ts'",
+		"format-check": "prettier --check '**/*.ts'",
+		"lint": "eslint src/**/*.ts",
+		"package": "ncc build --minify",
+		"test": "ava --verbose",
+		"all": "npm run format && npm run lint && npm run package # && npm test",
+		"prepare": "husky install",
+		"docs": "action-docs --update-readme"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/actions/typescript-action.git"
+	},
+	"keywords": [
+		"actions",
+		"node",
+		"setup"
+	],
+	"author": "",
+	"license": "MIT",
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	}
+}

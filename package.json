@@ -17,26 +17,6 @@
 		"url": "https://github.com/lockerstock/github-actions/issues"
 	},
 	"homepage": "https://github.com/lockerstock/github-actions#readme",
-	"devDependencies": {
-		"@octokit/openapi-types": "^16.0.0",
-		"@types/chai": "^4.3.4",
-		"@types/mocha": "^10.0.1",
-		"@types/node": "^18.15.10",
-		"@typescript-eslint/eslint-plugin": "^5.57.0",
-		"@typescript-eslint/parser": "^5.57.0",
-		"@vercel/ncc": "^0.36.1",
-		"action-docs": "^1.0.4",
-		"chai": "^4.3.7",
-		"eslint": "^8.36.0",
-		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-github": "^4.7.0",
-		"eslint-plugin-prettier": "^4.2.1",
-		"js-yaml": "^4.1.0",
-		"mocha": "^10.2.0",
-		"prettier": "^2.8.7",
-		"ts-node": "^10.9.1",
-		"typescript": "^4.9.5"
-	},
 	"workspaces": [
 		"determine-environment"
 	],
@@ -44,5 +24,31 @@
 		"@actions/core": "^1.10.0",
 		"@actions/github": "^5.1.1",
 		"octokit": "^2.0.14"
+	},
+	"devDependencies": {
+		"@octokit/core": "^4.2.0",
+		"@octokit/openapi-types": "^16.0.0",
+		"@octokit/request-error": "^3.0.3",
+		"@octokit/types": "^9.0.0",
+		"@types/chai": "^4.3.4",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^18.15.10",
+		"@typescript-eslint/eslint-plugin": "^5.57.0",
+		"@typescript-eslint/parser": "^5.57.0",
+		"@vercel/ncc": "^0.36.1",
+		"action-docs": "^1.0.4",
+		"ava": "^5.2.0",
+		"chai": "^4.3.7",
+		"dotenv": "^16.0.3",
+		"eslint": "^8.36.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-plugin-github": "^4.7.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"husky": "^8.0.3",
+		"js-yaml": "^4.1.0",
+		"mocha": "^10.2.0",
+		"prettier": "^2.8.7",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.9.5"
 	}
 }
