@@ -33,13 +33,13 @@ runs:
   steps:
     - name: Get Ref
       id: ref
-      uses: lockerstock/kubernetes-actions/get-ref@main
+      uses: lockerstock/github-actions/get-ref@main
       with:
         custom_ref: ${{ inputs.namespace }}
 
     - name: Get Environment
       id: environment
-      uses: lockerstock/kubernetes-actions/determine-environment@main
+      uses: lockerstock/github-actions/determine-environment@main
       with:
         token: ${{ inputs.token }}
         production_variable: 'production'
@@ -48,7 +48,7 @@ runs:
 
     - name: Prepare Namespace Name
       id: namespace
-      uses: lockerstock/kubernetes-actions/clean-variable@main
+      uses: lockerstock/github-actions/clean-variable@main
       with:
         variable: ${{ steps.environment.outputs.variable }}
 

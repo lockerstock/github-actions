@@ -10,12 +10,12 @@ jobs:
 
     steps:
       - name: Cleanup Deleted Branch
-        uses: lockerstock/kubernetes-actions/cleanup-deleted-branch@main
+        uses: lockerstock/github-actions/cleanup-deleted-branch@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deactivate Deployment
-        uses: lockerstock/kubernetes-actions/deployment-status@main
+        uses: lockerstock/github-actions/deployment-status@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           step: deactivate-env

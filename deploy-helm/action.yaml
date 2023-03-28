@@ -57,24 +57,24 @@ runs:
   steps:
     - name: Create Namespace
       id: namespace
-      uses: lockerstock/kubernetes-actions/create-feature-namespace@main
+      uses: lockerstock/github-actions/create-feature-namespace@main
       with:
         namespace: ${{ inputs.namespace }}
         token: ${{ inputs.token }}
 
     - name: Get Repository Name
       id: repository
-      uses: lockerstock/kubernetes-actions/clean-variable@main
+      uses: lockerstock/github-actions/clean-variable@main
       with:
         variable: ${{ github.repository }}
 
     - name: Short Sha
       id: short
-      uses: lockerstock/kubernetes-actions/get-short-sha@main
+      uses: lockerstock/github-actions/get-short-sha@main
 
     - name: Version
       id: version
-      uses: lockerstock/kubernetes-actions/determine-environment@main
+      uses: lockerstock/github-actions/determine-environment@main
       with:
         token: ${{ inputs.token }}
         production_variable: ${{ github.ref_name }}
@@ -83,7 +83,7 @@ runs:
 
     - name: Hostname
       id: hostname
-      uses: lockerstock/kubernetes-actions/get-configmap-value@main
+      uses: lockerstock/github-actions/get-configmap-value@main
       with:
         namespace: default
         config_map: hostnames

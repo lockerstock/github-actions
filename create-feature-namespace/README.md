@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Create Feature Namespace
         id: namespace
-        uses: lockerstock/kubernetes-actions/create-feature-namespace@main
+        uses: lockerstock/github-actions/create-feature-namespace@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```

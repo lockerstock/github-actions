@@ -1,5 +1,5 @@
 {
-	"name": "kubernetes-actions",
+	"name": "github-actions",
 	"version": "1.0.0",
 	"description": "Various GHA workflows packaged as workflow_call events.",
 	"main": "scripts/index.js",
@@ -9,14 +9,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/lockerstock/kubernetes-actions.git"
+		"url": "git+https://github.com/lockerstock/github-actions.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/lockerstock/kubernetes-actions/issues"
+		"url": "https://github.com/lockerstock/github-actions/issues"
 	},
-	"homepage": "https://github.com/lockerstock/kubernetes-actions#readme",
+	"homepage": "https://github.com/lockerstock/github-actions#readme",
 	"devDependencies": {
 		"@types/node": "^18.8.1",
 		"action-docs": "^1.0.4",

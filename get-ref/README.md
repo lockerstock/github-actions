@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Get Ref
         id: ref
-        uses: lockerstock/kubernetes-actions/get-ref@main
+        uses: lockerstock/github-actions/get-ref@main
 ```
 
 <!-- action-docs-inputs -->

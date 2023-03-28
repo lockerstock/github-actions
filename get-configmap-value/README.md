@@ -24,7 +24,7 @@ jobs:
 
       - name: Get ConfigMap
         id: config_map
-        uses: lockerstock/kubernetes-actions/get-configmap-value@main
+        uses: lockerstock/github-actions/get-configmap-value@main
         with:
           config_map: 'my-configmap'
           variable: 'my-variable'

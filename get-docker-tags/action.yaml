@@ -35,7 +35,7 @@ runs:
   steps:
     - name: Short Sha
       id: short
-      uses: lockerstock/kubernetes-actions/get-short-sha@main
+      uses: lockerstock/github-actions/get-short-sha@main
 
     - name: Image Name
       id: image
@@ -44,7 +44,7 @@ runs:
 
     - name: Determine Environment
       id: environment
-      uses: lockerstock/kubernetes-actions/determine-environment@main
+      uses: lockerstock/github-actions/determine-environment@main
       with:
         token: ${{ inputs.token }}
         production_variable: ${{ github.ref_name }}
