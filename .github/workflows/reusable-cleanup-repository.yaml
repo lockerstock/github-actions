@@ -1,0 +1,22 @@
+name: Cleanup Repository Resources
+
+on:
+  workflow_call:
+
+jobs:
+  deployment-cleanup:
+    runs-on: ubuntu-latest
+    name: Cleanup Inactive Deployments
+
+    strategy:
+      matrix:
+        environment:
+          - development
+          - staging
+          - production
+
+    steps:
+      - uses: lockerstock/delete-inactive-deployments@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: ${{ matrix.environment }}

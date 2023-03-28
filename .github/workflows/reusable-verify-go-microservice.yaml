@@ -1,0 +1,82 @@
+name: Verify Go Microservice
+
+on:
+  workflow_call:
+    secrets:
+      GHA_ACCESS_USER:
+        required: true
+      GHA_ACCESS_TOKEN:
+        required: true
+      BUF_USER:
+        required: true
+      BUF_TOKEN:
+        required: true
+
+jobs:
+  verify-buf:
+    name: Buf Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup buf CLI
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint Protobuf sources
+        uses: bufbuild/buf-lint-action@v1
+        with:
+          BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+
+      - name: Build Protobuf sources
+        run: buf build
+
+      - name: Format Protobuf sources
+        run: buf format -w
+
+      - name: Generate Protobuf server/clients
+        run: buf generate
+
+      - name: Breaking Change Detection
+        uses: bufbuild/buf-breaking-action@v1
+        id: breaking
+        with:
+          input: proto/api
+          against: 'https://github.com/${{ github.repository }}.git#branch=${{ github.event.repository.default_branch }},subdir=proto/api'
+          buf_input_https_username: ${{ secrets.GHA_ACCESS_USER }}
+          buf_input_https_password: ${{ secrets.GHA_ACCESS_TOKEN }}
+
+      - name: Compare proto/ directory for changes
+        run: |
+          if [ "$(git diff --ignore-space-at-eol proto/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build.  See status below:"
+            git diff
+            exit 1
+          fi
+        id: diff
+
+  verify-go:
+    name: Go Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+
+      - name: Setup Private Modules
+        run: git config --global url."https://${{ secrets.GHA_ACCESS_USER }}:${{ secrets.GHA_ACCESS_TOKEN }}@github.com".insteadOf "https://github.com"
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Compile Executable
+        run: go build main.go
+
+      - name: Run unit tests
+        run: go test ./... --cover

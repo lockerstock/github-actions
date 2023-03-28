@@ -1,0 +1,21 @@
+name: Cleanup Deleted Branch
+
+on:
+  workflow_call:
+
+jobs:
+  cleanup-deleted-branch:
+    name: Cleanup Deleted Branch
+    runs-on: self-hosted
+
+    steps:
+      - name: Cleanup Deleted Branch
+        uses: lockerstock/kubernetes-actions/cleanup-deleted-branch@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deactivate Deployment
+        uses: lockerstock/kubernetes-actions/deployment-status@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          step: deactivate-env
