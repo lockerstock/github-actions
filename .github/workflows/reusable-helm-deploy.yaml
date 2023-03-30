@@ -4,13 +4,17 @@ on:
   workflow_call:
     secrets:
       GHA_ACCESS_USER:
-        required: true
+        required: false
+        description: 'Required for Golang services to download private Go modules during Docker image builds.'
       GHA_ACCESS_TOKEN:
-        required: true
+        required: false
+        description: 'Required for Golang services to download private Go modules during Docker image builds.'
       BUF_USER:
-        required: true
+        required: false
+        description: 'Required for Golang services to access private Buf registries during Docker image builds.'
       BUF_TOKEN:
-        required: true
+        required: false
+        description: 'Required for Golang and frontend services to access private Buf registries during Docker image builds.'
 
 jobs:
   push_docker_image:
