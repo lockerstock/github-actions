@@ -5,6 +5,7 @@
   "description": "Package Has Version",
   "main": "dist/index.js",
   "scripts": {
+    "execute": "ts-node src/main.ts",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint . --ext .ts,.tsx",

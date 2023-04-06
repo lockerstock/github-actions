@@ -6,8 +6,8 @@ inputs:
     required: false
 
   package_name:
-    description: Name of package in package or container registry
-    required: true
+    description: Name of package in package or container registry. Will default in code to the name of current repository.
+    required: false
 
   package_owner:
     description: Package owner

@@ -8,12 +8,17 @@ interface PackageExists {
   type: components['schemas']['package']['package_type']
 }
 
-export async function doesPackageExists(
+export async function doesPackageExist(
   client: Octokit,
   config: PackageExists
-) {
-  const pkg = await getPackage(client, config)
-  return pkg.data.name === config.name
+): Promise<boolean> {
+  try {
+    const pkg = await getPackage(client, config)
+    return pkg.data.name === config.name
+  } catch (error) {
+    core.warning(error as Error)
+    return false
+  }
 }
 
 async function getPackage(client: Octokit, {owner, name, type}: PackageExists) {
