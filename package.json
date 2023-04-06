@@ -18,7 +18,9 @@
 	},
 	"homepage": "https://github.com/lockerstock/github-actions#readme",
 	"workspaces": [
-		"determine-environment"
+		"delete-inactive-deployments",
+		"determine-environment",
+		"package-has-version"
 	],
 	"dependencies": {
 		"@actions/core": "^1.10.0",

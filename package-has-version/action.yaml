@@ -1,0 +1,35 @@
+name: Package Has Version
+description: Uses GitHub API to check if a provided version exists as a tag within a given package or container registry
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  package_name:
+    description: Name of package in package or container registry
+    required: true
+
+  package_owner:
+    description: Package owner
+    required: false
+    default: ${{ github.repository_owner }}
+
+  package_type:
+    description: Type of package within package registry
+    required: false
+    default: 'container'
+
+  package_version:
+    description: Provided version to search the package for.
+    required: false
+    default: 'latest'
+
+outputs:
+  package_exists:
+    description: Boolean value indicating whether or not the package exists within the organization.
+  version_exists:
+    description: Boolean value indicating whether or not the provided version exists as a tag within the package.
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
