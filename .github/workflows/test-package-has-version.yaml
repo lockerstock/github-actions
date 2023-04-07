@@ -44,8 +44,8 @@ jobs:
         run: |
           if [[ "${{ steps.existing.outputs.package_exists }}" != true || "${{ steps.existing.outputs.version_exists }}" != false ]]; then
             echo "::error::Invalid results for existing image and non-existing version"
-            echo "Package Exists ${{ steps.existing.outputs.package_exists }}"
-            echo "Version Exists ${{ steps.existing.outputs.version_exists }}"
+            echo "Package Exists ${{ steps.non_existing_version.outputs.package_exists }}"
+            echo "Version Exists ${{ steps.non_existing_version.outputs.version_exists }}"
             exit 1
           fi
 
@@ -60,7 +60,7 @@ jobs:
         run: |
           if [[ "${{ steps.existing.outputs.package_exists }}" != false || "${{ steps.existing.outputs.version_exists }}" != false ]]; then
             echo "::error::Invalid results for non-existing image"
-            echo "Package Exists ${{ steps.existing.outputs.package_exists }}"
-            echo "Version Exists ${{ steps.existing.outputs.version_exists }}"
+            echo "Package Exists ${{ steps.non_existing_package.outputs.package_exists }}"
+            echo "Version Exists ${{ steps.non_existing_package.outputs.version_exists }}"
             exit 1
           fi
