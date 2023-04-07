@@ -9,6 +9,8 @@ on:
   pull_request:
     paths:
       - 'determine-environment/**/*'
+      - 'delete-inactive-deployments/**/*'
+      - 'package-has-version/**/*'
       - '.github/workflows/check-dist.yaml'
   workflow_dispatch:
 
@@ -18,7 +20,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        path: ['determine-environment', 'delete-inactive-deployments']
+        path: ['determine-environment', 'delete-inactive-deployments', 'package-has-version']
 
     steps:
       - uses: actions/checkout@v2
