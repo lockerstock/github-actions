@@ -9,7 +9,7 @@ on:
 jobs:
   test-deploy-helm:
     name: Test Helm deploy
-    runs-on: self-hosted
+    runs-on: [self-hosted, k8s, development]
 
     steps:
       - name: Checkout

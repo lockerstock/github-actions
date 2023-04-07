@@ -5,7 +5,7 @@ on:
 jobs:
   test-cleanup-deleted-branch:
     name: Test cleanup deleted branch
-    runs-on: self-hosted
+    runs-on: [self-hosted, k8s, development]
 
     steps:
       - name: Checkout

@@ -9,7 +9,7 @@ on:
 jobs:
   test-get-configmap-value:
     name: Test get ConfigMap value
-    runs-on: self-hosted
+    runs-on: [self-hosted, k8s, development]
 
     steps:
       - name: Checkout
