@@ -1,0 +1,63 @@
+name: Test package-has-version
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'package-has-version/**/*'
+      - '.github/workflows/test-package-has-version.yaml'
+
+jobs:
+  test-package-has-version:
+    name: Test package has version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Existing Package has existing version
+        id: existing
+        uses: ./package-has-version
+        with:
+          package_name: github-actions/nginx
+          package_version: latest
+
+      - name: 'Existing Image and Version Results'
+        run: |
+          if [[ "${{ steps.existing.outputs.package_exists }}" != true || "${{ steps.existing.outputs.version_exists }}" != true ]]; then
+            echo "::error::Invalid results for existing image and version"
+            echo "Package Exists ${{ steps.existing.outputs.package_exists }}"
+            echo "Version Exists ${{ steps.existing.outputs.version_exists }}"
+            exit 1
+          fi
+
+      - name: Existing Package does not have existing version
+        id: non_existing_version
+        uses: ./package-has-version
+        with:
+          package_name: github-actions/nginx
+          package_version: missing-tag
+
+      - name: 'Existing Image and non-existing Version Results'
+        run: |
+          if [[ "${{ steps.existing.outputs.package_exists }}" != true || "${{ steps.existing.outputs.version_exists }}" != false ]]; then
+            echo "::error::Invalid results for existing image and non-existing version"
+            echo "Package Exists ${{ steps.existing.outputs.package_exists }}"
+            echo "Version Exists ${{ steps.existing.outputs.version_exists }}"
+            exit 1
+          fi
+
+      - name: Package Does Not Exist
+        id: non_existing_package
+        uses: ./package-has-version
+        with:
+          package_name: github-actions/missing-package
+
+      - name: 'Non-existing Image Results'
+        run: |
+          if [[ "${{ steps.existing.outputs.package_exists }}" != false || "${{ steps.existing.outputs.version_exists }}" != false ]]; then
+            echo "::error::Invalid results for non-existing image"
+            echo "Package Exists ${{ steps.existing.outputs.package_exists }}"
+            echo "Version Exists ${{ steps.existing.outputs.version_exists }}"
+            exit 1
+          fi

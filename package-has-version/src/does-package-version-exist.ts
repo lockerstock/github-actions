@@ -1,6 +1,5 @@
 import {Octokit} from '@octokit/core'
 import {components} from '@octokit/openapi-types'
-import * as core from '@actions/core'
 
 interface PackageVersionExists {
   owner: string
