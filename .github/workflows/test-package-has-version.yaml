@@ -19,7 +19,7 @@ jobs:
         id: existing
         uses: ./package-has-version
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/nginx
           package_version: latest
 
@@ -36,7 +36,7 @@ jobs:
         id: non_existing_version
         uses: ./package-has-version
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/nginx
           package_version: missing-tag
 
@@ -53,7 +53,7 @@ jobs:
         id: non_existing_package
         uses: ./package-has-version
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/missing-package
 
       - name: 'Non-existing Image Results'
