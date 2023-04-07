@@ -75,10 +75,19 @@ jobs:
             BUF_USER=${{ secrets.BUF_USER }}
             BUF_TOKEN=${{ secrets.BUF_TOKEN }}
 
-  deploy-development:
-    name: Deploy Development Helm Chart
-    if: needs.push_docker_image.outputs.environment == 'development'
-    runs-on: [self-hosted, k8s, development]
+  deploy:
+    name: Deploy Helm Chart
+    strategy:
+      matrix:
+        environment:
+          - development
+          - staging
+          - production
+    if: needs.push_docker_image.outputs.environment == matrix.environment
+    runs-on:
+      - self-hosted
+      - k8s
+      - ${{ matrix.environment }}
     needs:
       - push_docker_image
 
@@ -110,72 +119,107 @@ jobs:
           environment: ${{ steps.deploy.outputs.environment }}
           auto_inactive: true
 
-  deploy-staging:
-    name: Deploy Staging Helm Chart
-    if: needs.push_docker_image.outputs.environment == 'staging'
-    runs-on: [self-hosted, k8s, staging]
-    needs:
-      - push_docker_image
+  # deploy-development:
+  #   name: Deploy Development Helm Chart
+  #   if: needs.push_docker_image.outputs.environment == 'development'
+  #   runs-on: [self-hosted, k8s, development]
+  #   needs:
+  #     - push_docker_image
 
-    permissions:
-      contents: write
-      id-token: write
-      deployments: write
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #     deployments: write
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Helm deploy
-        id: deploy
-        uses: lockerstock/github-actions/deploy-helm@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
-          chart_path: deployments/helm/${{ github.event.repository.name }}
+  #     - name: Helm deploy
+  #       id: deploy
+  #       uses: lockerstock/github-actions/deploy-helm@main
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
+  #         chart_path: deployments/helm/${{ github.event.repository.name }}
 
-      - name: Finish Deployment
-        uses: lockerstock/github-actions/deployment-status@main
-        if: always()
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment_id: ${{ needs.push_docker_image.outputs.deployment_id }}
-          step: finish
-          env_url: https://${{ steps.deploy.outputs.hostname }}
-          environment: ${{ steps.deploy.outputs.environment }}
-          auto_inactive: true
+  #     - name: Finish Deployment
+  #       uses: lockerstock/github-actions/deployment-status@main
+  #       if: always()
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         deployment_id: ${{ needs.push_docker_image.outputs.deployment_id }}
+  #         step: finish
+  #         env_url: https://${{ steps.deploy.outputs.hostname }}
+  #         environment: ${{ steps.deploy.outputs.environment }}
+  #         auto_inactive: true
 
-  deploy-production:
-    name: Deploy Production Helm Chart
-    if: needs.push_docker_image.outputs.environment == 'production'
-    runs-on: [self-hosted, k8s, production]
-    needs:
-      - push_docker_image
+  # deploy-staging:
+  #   name: Deploy Staging Helm Chart
+  #   if: needs.push_docker_image.outputs.environment == 'staging'
+  #   runs-on: [self-hosted, k8s, staging]
+  #   needs:
+  #     - push_docker_image
 
-    permissions:
-      contents: write
-      id-token: write
-      deployments: write
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #     deployments: write
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Helm deploy
-        id: deploy
-        uses: lockerstock/github-actions/deploy-helm@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
-          chart_path: deployments/helm/${{ github.event.repository.name }}
+  #     - name: Helm deploy
+  #       id: deploy
+  #       uses: lockerstock/github-actions/deploy-helm@main
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
+  #         chart_path: deployments/helm/${{ github.event.repository.name }}
 
-      - name: Finish Deployment
-        uses: lockerstock/github-actions/deployment-status@main
-        if: always()
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment_id: ${{ needs.push_docker_image.outputs.deployment_id }}
-          step: finish
-          env_url: https://${{ steps.deploy.outputs.hostname }}
-          environment: ${{ steps.deploy.outputs.environment }}
-          auto_inactive: true
+  #     - name: Finish Deployment
+  #       uses: lockerstock/github-actions/deployment-status@main
+  #       if: always()
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         deployment_id: ${{ needs.push_docker_image.outputs.deployment_id }}
+  #         step: finish
+  #         env_url: https://${{ steps.deploy.outputs.hostname }}
+  #         environment: ${{ steps.deploy.outputs.environment }}
+  #         auto_inactive: true
+
+  # deploy-production:
+  #   name: Deploy Production Helm Chart
+  #   if: needs.push_docker_image.outputs.environment == 'production'
+  #   runs-on: [self-hosted, k8s, production]
+  #   needs:
+  #     - push_docker_image
+
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #     deployments: write
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Helm deploy
+  #       id: deploy
+  #       uses: lockerstock/github-actions/deploy-helm@main
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
+  #         chart_path: deployments/helm/${{ github.event.repository.name }}
+
+  #     - name: Finish Deployment
+  #       uses: lockerstock/github-actions/deployment-status@main
+  #       if: always()
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         deployment_id: ${{ needs.push_docker_image.outputs.deployment_id }}
+  #         step: finish
+  #         env_url: https://${{ steps.deploy.outputs.hostname }}
+  #         environment: ${{ steps.deploy.outputs.environment }}
+  #         auto_inactive: true
