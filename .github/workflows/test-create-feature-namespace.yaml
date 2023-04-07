@@ -9,7 +9,7 @@ on:
 jobs:
   test-create-feature-namespaces:
     name: Test creating feature namespaces
-    runs-on: self-hosted
+    runs-on: [self-hosted, k8s, development]
 
     steps:
       - name: Checkout
