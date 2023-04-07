@@ -20,7 +20,8 @@
 	"workspaces": [
 		"delete-inactive-deployments",
 		"determine-environment",
-		"package-has-version"
+		"package-has-version",
+		"get-package-version"
 	],
 	"dependencies": {
 		"@actions/core": "^1.10.0",
