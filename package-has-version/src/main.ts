@@ -32,7 +32,7 @@ async function run(): Promise<void> {
   const packageOwner = core.getInput('package_owner', {required: true})
   const packageVersion = core.getInput('package_version', {required: true})
 
-  core.debug(
+  core.info(
     JSON.stringify({packageName, packageOwner, packageVersion, packageType})
   )
 
