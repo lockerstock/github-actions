@@ -1,4 +1,4 @@
-name: Deploy Nginx Image
+name: Publish Nginx Image
 
 on:
   workflow_dispatch:
@@ -13,8 +13,6 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v3
-
       - uses: docker/setup-buildx-action@v2
 
       - uses: docker/login-action@v2
@@ -29,4 +27,4 @@ jobs:
           push: true
           tags: ghcr.io/lockerstock/github-actions/nginx
           platforms: linux/amd64
-          context: .github/config/Dockerfile.nginx
+          file: .github/config/Dockerfile.nginx
