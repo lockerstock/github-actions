@@ -6,7 +6,7 @@ on:
 jobs:
   cleanup-deleted-branch:
     name: Cleanup Deleted Branch
-    runs-on: self-hosted
+    runs-on: [self-hosted, k8s, development]
 
     steps:
       - name: Cleanup Deleted Branch
