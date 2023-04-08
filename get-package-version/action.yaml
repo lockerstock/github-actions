@@ -20,7 +20,7 @@ inputs:
     default: 'container'
 
   package_version_constraint:
-    description: Provided version constraints to search the package for.
+    description: Provided version constraints to search the package for. See [specification](https://github.com/npm/node-semver#versions) on possible constraints.
     required: false
     default: 'latest'
 
