@@ -11,6 +11,10 @@ jobs:
     name: Test Helm deploy
     runs-on: [self-hosted, k8s, development]
 
+    permissions:
+      contents: read
+      packages: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
