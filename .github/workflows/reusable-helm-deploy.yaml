@@ -110,7 +110,7 @@ jobs:
 
       - name: Helm deploy
         id: deploy
-        uses: lockerstock/github-actions/deploy-helm@main
+        uses: lockerstock/github-actions/deploy-helm@feature/central-helm-deploy
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
