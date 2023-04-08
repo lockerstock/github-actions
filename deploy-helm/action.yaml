@@ -6,6 +6,11 @@ inputs:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
     required: false
 
+  actor:
+    description: GitHub Access User to use alongside above token
+    required: false
+    default: ${{ github.actor }}
+
   chart_path:
     description: 'Path to Helm chart'
     required: false
@@ -155,7 +160,7 @@ runs:
 
     - name: Login to Helm Registry
       if: steps.chart.outputs.source != ''
-      run: echo ${{ inputs.token }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+      run: echo ${{ inputs.token }} | helm registry login ghcr.io --username ${{ inputs.actor }} --password-stdin
       shell: bash
 
     - name: Helm Deploy from Remote
