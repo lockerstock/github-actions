@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         description: Boolean flag to skip the docker build and publish steps of the workflow. Used for helm deploys that do not require their own Docker image.
+      chart_path:
+        default: deployments/helm/${{ github.event.repository.name }}
+        required: false
+        type: string
+        description: 'Path to Helm chart'
     secrets:
       GHA_ACCESS_USER:
         required: false
@@ -108,7 +113,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           image_tag: ${{ needs.push_docker_image.outputs.image_tag }}
-          chart_path: deployments/helm/${{ github.event.repository.name }}
+          chart_path: ${{ inputs.chart_path }}
 
       - name: Finish Deployment
         uses: lockerstock/github-actions/deployment-status@main
