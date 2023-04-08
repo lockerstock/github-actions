@@ -1,0 +1,42 @@
+name: Get Package Version
+description: Get a viable package version based on provided input.
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  package_name:
+    description: Name of package in package or container registry. Will default in code to the name of current repository.
+    required: false
+
+  package_owner:
+    description: Package owner
+    required: false
+    default: ${{ github.repository_owner }}
+
+  package_type:
+    description: Type of package within package registry
+    required: false
+    default: 'container'
+
+  package_version_constraint:
+    description: Provided version constraints to search the package for. See [specification](https://github.com/npm/node-semver#versions) on possible constraints.
+    required: false
+    default: 'latest'
+
+  error_on_not_found:
+    description: Boolean flag to have action terminate with error if the package is not found or if a version is not located for given constraint.
+    required: false
+    default: true
+
+outputs:
+  package_exists:
+    description: Boolean value indicating whether or not the package exists within the organization.
+  version_exists:
+    description: Boolean value indicating whether or not the provided version constraint was able to find a matching version in the package.
+  version:
+    description: The actual version string that matched the provided version constraint.
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
