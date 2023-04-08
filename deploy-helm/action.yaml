@@ -95,6 +95,11 @@ runs:
       working-directory: ${{ inputs.chart_path }}
       shell: bash
 
+    - name: Outputs
+      run: |
+        echo "'${{ steps.chart.outputs.source }}'"
+      shell: bash
+
     - name: Get Source Version
       if: ${{ steps.chart.outputs.source }} != ''
       id: package
