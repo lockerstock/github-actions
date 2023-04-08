@@ -155,7 +155,7 @@ runs:
 
     - name: Login to Helm Registry
       if: ${{ steps.chart.outputs.source }} != ''
-      run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+      run: echo ${{ inputs.token }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
       shell: bash
 
     - name: Helm Deploy from Remote
