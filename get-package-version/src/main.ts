@@ -75,8 +75,14 @@ async function run(): Promise<void> {
     })
   )
   core.debug(JSON.stringify({tags}))
-  core.setOutput(outputVersionExists, tags.length > 0)
-  core.setOutput(outputVersion, tags.shift())
+  const versionExists = tags.length > 0
+  core.setOutput(outputVersionExists, versionExists)
+  const version = tags.shift()
+  core.setOutput(outputVersion, version)
+
+  core.info(
+    `Outputs: ${JSON.stringify({packageExists, versionExists, version})}`
+  )
 
   if (errorOnNotFound && tags.length === 0) {
     core.error(

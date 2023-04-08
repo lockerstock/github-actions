@@ -27,7 +27,7 @@ inputs:
   error_on_not_found:
     description: Boolean flag to have action terminate with error if the package is not found or if a version is not located for given constraint.
     required: false
-    default: true
+    default: 'true'
 
 outputs:
   package_exists:
