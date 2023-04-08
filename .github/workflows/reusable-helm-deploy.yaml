@@ -102,6 +102,7 @@ jobs:
       contents: write
       id-token: write
       deployments: write
+      packages: read
 
     steps:
       - name: Checkout
