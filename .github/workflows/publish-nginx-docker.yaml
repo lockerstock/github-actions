@@ -2,6 +2,9 @@ name: Publish Nginx Image
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        default: 'latest'
 
 jobs:
   push_docker_image:
@@ -25,6 +28,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/lockerstock/github-actions/nginx
+          tags: ghcr.io/lockerstock/github-actions/nginx:${{ inputs.tag }}
           platforms: linux/amd64
           file: .github/config/Dockerfile.nginx
