@@ -2,6 +2,12 @@ name: Deploy Kubernetes Application
 
 on:
   workflow_call:
+    inputs:
+      skip_docker_image:
+        default: false
+        required: false
+        type: boolean
+        description: Boolean flag to skip the docker build and publish steps of the workflow. Used for helm deploys that do not require their own Docker image.
     secrets:
       GHA_ACCESS_USER:
         required: false
@@ -34,8 +40,10 @@ jobs:
 
     steps:
       - uses: docker/setup-buildx-action@v2
+        if: !inputs.skip_docker_image
 
       - uses: docker/login-action@v2
+        if: !inputs.skip_docker_image
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -56,6 +64,7 @@ jobs:
           environment: ${{ steps.docker.outputs.environment }}
 
       - name: Build and Push Docker Image
+        if: !inputs.skip_docker_image
         uses: docker/build-push-action@v3
         with:
           push: true
