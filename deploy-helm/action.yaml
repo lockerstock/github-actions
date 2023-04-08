@@ -95,13 +95,8 @@ runs:
       working-directory: ${{ inputs.chart_path }}
       shell: bash
 
-    - name: Outputs
-      run: |
-        echo "'${{ steps.chart.outputs.source }}'"
-      shell: bash
-
     - name: Get Source Version
-      if: ${{ steps.chart.outputs.source }} != ''
+      if: steps.chart.outputs.source != ''
       id: package
       uses: lockerstock/github-actions/get-package-version@main
       with:
@@ -147,7 +142,7 @@ runs:
     ##### Deploy Helm Chart from acting repository #####
 
     - name: Helm Deploy
-      if: ${{ steps.chart.outputs.source }} == ''
+      if: steps.chart.outputs.source == ''
       run: |
         helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
@@ -159,12 +154,12 @@ runs:
     ##### Deploy Helm Chart from remote repository #####
 
     - name: Login to Helm Registry
-      if: ${{ steps.chart.outputs.source }} != ''
+      if: steps.chart.outputs.source != ''
       run: echo ${{ inputs.token }} | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
       shell: bash
 
     - name: Helm Deploy from Remote
-      if: ${{ steps.chart.outputs.source }} != ''
+      if: steps.chart.outputs.source != ''
       run: |
         helm upgrade --install ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.source }} \
           --version ${{ steps.package.outputs.version }} \
@@ -178,14 +173,14 @@ runs:
     ##### Prepare and attach Helm charts to release #####
 
     - name: Build Template From Repository
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
       run: |
         helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
     - name: Build Template From Remote Repository
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} != ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
       run: |
         helm template ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.source }} \
           --version ${{ steps.package.outputs.version }} \
@@ -194,12 +189,12 @@ runs:
       shell: bash
 
     - name: Build Template From Repository
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
       run: helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
     - name: Build Package
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
       run: helm package ${{ inputs.chart_path }}
       shell: bash
 
@@ -211,7 +206,7 @@ runs:
       shell: bash
 
     - name: Add packaged chart to release
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
       run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.version.outputs.variable }}.tgz"
       env:
         GH_TOKEN: ${{ inputs.token }}
@@ -219,7 +214,7 @@ runs:
       shell: bash
 
     - name: Add prepared values.yaml to release
-      if: github.ref_type == 'tag' && ${{ steps.chart.outputs.source }} != ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
       run: gh release upload ${{ github.ref_name }} values.yaml"
       env:
         GH_TOKEN: ${{ inputs.token }}
