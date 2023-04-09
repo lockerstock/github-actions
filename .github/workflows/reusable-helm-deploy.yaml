@@ -110,7 +110,7 @@ jobs:
 
       - name: Helm deploy
         id: deploy
-        uses: lockerstock/github-actions/deploy-helm@feature/central-helm-deploy
+        uses: lockerstock/github-actions/deploy-helm@main
         with:
           token: ${{ secrets.GHA_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           actor: ${{ secrets.GHA_ACCESS_USER }}

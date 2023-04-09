@@ -103,7 +103,7 @@ runs:
     - name: Get Source Version
       if: steps.chart.outputs.source != ''
       id: package
-      uses: lockerstock/github-actions/get-package-version@feature/central-helm-deploy
+      uses: lockerstock/github-actions/get-package-version@main
       with:
         token: ${{ inputs.token }}
         package_owner: ${{ steps.chart.outputs.source_owner }}
