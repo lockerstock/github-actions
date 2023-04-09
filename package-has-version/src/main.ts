@@ -57,6 +57,8 @@ async function run(): Promise<void> {
     version: packageVersion
   })
   core.setOutput(outputVersionExists, versionExists)
+
+  core.info(`Outputs: ${JSON.stringify({packageExists, versionExists})}`)
 }
 
 run()
