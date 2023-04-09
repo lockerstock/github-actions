@@ -61,7 +61,7 @@ async function run(): Promise<void> {
   if (!packageExists) {
     core.setOutput(outputVersionExists, false)
     if (errorOnNotFound) {
-      core.error(`Failed to locate package: ${packageOwner}/${packageName}`)
+      core.setFailed(`Failed to locate package: ${packageOwner}/${packageName}`)
     }
     return
   }
@@ -84,8 +84,8 @@ async function run(): Promise<void> {
     `Outputs: ${JSON.stringify({packageExists, versionExists, version})}`
   )
 
-  if (errorOnNotFound && tags.length === 0) {
-    core.error(
+  if (errorOnNotFound && version === '') {
+    core.setFailed(
       `Failed to find compatible version with given constraint: ${packageVersionConstraint}`
     )
     return
