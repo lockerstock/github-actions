@@ -220,7 +220,7 @@ runs:
 
     - name: Add prepared values.yaml to release
       if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
-      run: gh release upload ${{ github.ref_name }} values.yaml"
+      run: gh release upload ${{ github.ref_name }} values.yaml
       env:
         GH_TOKEN: ${{ inputs.token }}
       working-directory: ${{ inputs.chart_path }}
