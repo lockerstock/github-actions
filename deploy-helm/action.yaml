@@ -205,14 +205,14 @@ runs:
 
     - name: Add template to release
       if: github.ref_type == 'tag'
-      run: gh release upload ${{ github.ref_name }} ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
+      run: gh release upload ${{ github.ref_name }} ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
       shell: bash
 
     - name: Add packaged chart to release
       if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
-      run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.version.outputs.variable }}.tgz"
+      run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.version.outputs.variable }}.tgz" --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
         CHART_PATH: ${{ inputs.chart_path }}
@@ -220,7 +220,7 @@ runs:
 
     - name: Add prepared values.yaml to release
       if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
-      run: gh release upload ${{ github.ref_name }} values.yaml
+      run: gh release upload ${{ github.ref_name }} values.yaml --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
       working-directory: ${{ inputs.chart_path }}
