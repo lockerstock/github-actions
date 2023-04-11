@@ -1,0 +1,10 @@
+name: Add Release Notes
+description: Adds provided text to the end of the release notes for a given release.
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
