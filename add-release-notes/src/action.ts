@@ -1,7 +1,3 @@
-export function getRepoOwner(): string {
-  return process.env.GITHUB_REPOSITORY_OWNER || '';
-}
-
 export function getRepo(): string {
   const fullRepo = process.env.GITHUB_REPOSITORY || '';
   const parts = fullRepo.split('/');

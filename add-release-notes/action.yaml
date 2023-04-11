@@ -5,6 +5,20 @@ inputs:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
     required: false
 
+  owner:
+    description: Owner of released repository
+    required: false
+    default: ${{ github.repository_owner }}
+
+  repository:
+    description: Repository of release. Will default to name of repository in code.
+    required: false
+
+  tag:
+    description: Tag of release
+    required: false
+    default: ${{ github.ref_name }}
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
