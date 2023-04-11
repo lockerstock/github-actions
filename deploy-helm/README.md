@@ -36,6 +36,7 @@ jobs:
 | parameter | description | required | default |
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
+| actor | GitHub Access User to use alongside above token | `false` | ${{ github.actor }} |
 | chart_path | Path to Helm chart | `false` | deployments/helm/${{ github.event.repository.name }} |
 | image_tag | Tag of Docker image | `false` | latest |
 | namespace | Namespace to deploy Helm chart. If not provided, will be calculated from action trigger | `false` |  |
