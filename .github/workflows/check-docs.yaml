@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install --prefer-offline --frozen-lockfile
 
-      - name: Rebuild the dist/ directory
+      - name: Regenerate all READMEs
         run: npm run docs
 
       - name: Compare the expected and actual READMEs
