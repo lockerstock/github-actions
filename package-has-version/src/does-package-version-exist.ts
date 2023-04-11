@@ -1,11 +1,11 @@
-import {Octokit} from '@octokit/core'
-import {components} from '@octokit/openapi-types'
+import {Octokit} from '@octokit/core';
+import {components} from '@octokit/openapi-types';
 
 interface PackageVersionExists {
-  owner: string
-  name: string
-  type: components['schemas']['package']['package_type']
-  version: string
+  owner: string;
+  name: string;
+  type: components['schemas']['package']['package_type'];
+  version: string;
 }
 
 export async function doesPackageVersionExist(
@@ -22,11 +22,11 @@ export async function doesPackageVersionExist(
       per_page: 100,
       page
     }
-  )
+  );
 
   for (const item of data) {
     if (item.metadata?.container?.tags.includes(version)) {
-      return true
+      return true;
     }
   }
 
@@ -35,8 +35,8 @@ export async function doesPackageVersionExist(
       client,
       {owner, name, type, version},
       page + 1
-    )
+    );
   }
 
-  return false
+  return false;
 }

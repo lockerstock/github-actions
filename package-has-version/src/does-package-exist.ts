@@ -1,11 +1,11 @@
-import * as core from '@actions/core'
-import {Octokit} from '@octokit/core'
-import {components} from '@octokit/openapi-types'
+import * as core from '@actions/core';
+import {Octokit} from '@octokit/core';
+import {components} from '@octokit/openapi-types';
 
 interface PackageExists {
-  owner: string
-  name: string
-  type: components['schemas']['package']['package_type']
+  owner: string;
+  name: string;
+  type: components['schemas']['package']['package_type'];
 }
 
 export async function doesPackageExist(
@@ -13,11 +13,11 @@ export async function doesPackageExist(
   config: PackageExists
 ): Promise<boolean> {
   try {
-    const pkg = await getPackage(client, config)
-    return pkg.data.name === config.name
+    const pkg = await getPackage(client, config);
+    return pkg.data.name === config.name;
   } catch (error) {
-    core.warning(error as Error)
-    return false
+    core.warning(error as Error);
+    return false;
   }
 }
 
@@ -29,5 +29,5 @@ async function getPackage(client: Octokit, {owner, name, type}: PackageExists) {
       package_name: name,
       package_type: type
     }
-  )
+  );
 }
