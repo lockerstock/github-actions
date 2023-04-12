@@ -17,10 +17,12 @@ Adds provided text to the end of the release notes for a given release.
 
 | parameter | description | required | default |
 | - | - | - | - |
-| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
+| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
 | owner | Owner of released repository | `false` | ${{ github.repository_owner }} |
-| repository | Repository of release. Will default to name of repository in code. | `false` |  |
+| repository | Repository of release | `false` | ${{ github.event.repository.name }} |
 | tag | Tag of release | `false` | ${{ github.ref_name }} |
+| title | Unique title to populate in release notes as comment to target automatically added notes in subsequent runs. | `true` |  |
+| body | Body of text to append to release | `true` |  |
 
 
 

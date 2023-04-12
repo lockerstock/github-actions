@@ -13,6 +13,5 @@ export async function getReleaseNotes(client: Octokit, config: ReleaseNotes) {
       ...config
     }
   );
-
-  return data.body;
+  return data;
 }

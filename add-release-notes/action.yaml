@@ -3,7 +3,7 @@ description: Adds provided text to the end of the release notes for a given rele
 inputs:
   token:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
-    required: false
+    required: true
 
   owner:
     description: Owner of released repository
@@ -11,13 +11,22 @@ inputs:
     default: ${{ github.repository_owner }}
 
   repository:
-    description: Repository of release. Will default to name of repository in code.
+    description: Repository of release
     required: false
+    default: ${{ github.event.repository.name }}
 
   tag:
     description: Tag of release
     required: false
     default: ${{ github.ref_name }}
+
+  title:
+    description: Unique title to populate in release notes as comment to target automatically added notes in subsequent runs.
+    required: true
+
+  body:
+    description: Body of text to append to release
+    required: true
 
 runs:
   using: 'node16'
