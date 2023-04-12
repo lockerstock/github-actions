@@ -20,7 +20,7 @@ async function run(): Promise<void> {
   try {
     const release = await getReleaseNotes(octokit, {owner, repo, tag});
 
-    const injectedBody = injectMarkdownText(release.body ?? '', body);
+    const injectedBody = injectMarkdownText(title, release.body ?? '', body);
 
     const {data} = await updateReleaseNotes(octokit, {
       owner,
