@@ -9,7 +9,24 @@ Adds provided text to the end of the release notes for a given release.
 ## Example Usage
 
 ```yaml
+name: Add Release Notes
+on:
+  - push
 
+jobs:
+  add-release-notes:
+    name: Add Release Notes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add Release Notes
+        uses: ./add-release-notes
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Deployment Instructions'
+          body: |
+            ### Deployments Instructions
+            - Do the thing
 ```
 
 <!-- action-docs-inputs -->
