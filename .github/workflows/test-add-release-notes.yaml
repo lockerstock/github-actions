@@ -1,0 +1,30 @@
+name: Test add-release-notes
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'add-release-notes/**/*'
+      - '.github/workflows/test-add-release-notes.yaml'
+
+jobs:
+  test-add-release-notes:
+    name: Test add release notes
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Existing Package has existing version
+        id: existing
+        uses: ./add-release-notes
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: add-release-notes
+          title: 'GHA Testing'
+          body: |
+            ### GHA Release Notes
+            - This was added from the GHA
