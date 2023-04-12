@@ -26,5 +26,5 @@ jobs:
           tag: add-release-notes
           title: 'GHA Testing'
           body: |
-            ### Release Notes
+            ### GHA Release Notes
             - This was added from the GHA
