@@ -1,0 +1,20 @@
+name: Cleanup GitHub Container Registry
+description: Processes through all GitHub Container Registry images to determine which images to delete from the registry to cleanup unused and old images-.
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: true
+
+  container_owner:
+    description: Owner of container repository
+    required: false
+    default: ${{ github.repository_owner }}
+
+  container_repository:
+    description: Container Registry Repository
+    required: false
+    default: ${{ github.event.repository.name }}
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

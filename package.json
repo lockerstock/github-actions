@@ -19,6 +19,7 @@
   "homepage": "https://github.com/lockerstock/github-actions#readme",
   "workspaces": [
     "add-release-notes",
+    "cleanup-ghcr",
     "delete-inactive-deployments",
     "determine-environment",
     "package-has-version",
