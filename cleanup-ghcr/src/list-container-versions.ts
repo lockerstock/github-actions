@@ -9,7 +9,7 @@ interface ListContainerVersions {
 export async function listContainerVersions(
   client: Octokit,
   {owner, name}: ListContainerVersions,
-  page = 0
+  page = 1
 ): Promise<components['schemas']['package-version'][]> {
   const {data} = await client.request(
     'GET /orgs/{org}/packages/{package_type}/{package_name}/versions',
