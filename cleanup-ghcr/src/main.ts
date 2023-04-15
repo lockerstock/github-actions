@@ -109,6 +109,9 @@ async function run(): Promise<void> {
     );
 
     if (!dryRun) {
+      core.info(
+        `Found ${containersToDrop.length} container versions to delete.`
+      );
       deleteConcurrently
         ? await deleteContainerVersionsConcurrently(
             octokit,
@@ -127,7 +130,9 @@ async function run(): Promise<void> {
         }):\n\t${containersToDrop
           .map(
             c =>
-              `ID: ${c.id}, Name: ${c.name}, Tags: ${c.metadata?.container?.tags}`
+              `ID: ${c.id}, Name: ${c.name}, Tags: ${JSON.stringify(
+                c.metadata?.container?.tags ?? []
+              )}`
           )
           .join('\n\t')}`
       );
