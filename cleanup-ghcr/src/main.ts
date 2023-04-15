@@ -82,7 +82,7 @@ async function run(): Promise<void> {
 
     const containersToDrop = filtered.drop.concat(noTagsToDrop);
 
-    core.debug(
+    core.info(
       JSON.stringify({
         length: containers.length,
         dropLength: filtered.drop.length,
