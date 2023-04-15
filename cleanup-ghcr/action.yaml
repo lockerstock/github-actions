@@ -36,7 +36,7 @@ inputs:
     default: 'false'
 
   dry_run:
-    description: Boolean flag to run the action dryly on not delete an container versions. Will also print container information for all found delete candidates.
+    description: Boolean flag to run the action dryly on not delete an container versions. Will also print container information for all found delete candidates. Used during implementation to make sure rules satisfy needs.
     required: false
     default: 'false'
 
