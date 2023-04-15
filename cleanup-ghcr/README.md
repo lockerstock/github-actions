@@ -1,7 +1,7 @@
 <!-- action-docs-description -->
 ## Description
 
-Processes through all GitHub Container Registry images to determine which images to delete from the registry to cleanup unused and old images.
+Processes through all GitHub Container Registry images to determine which images to delete from the registry to cleanup unused and old images-.
 
 
 <!-- action-docs-description -->
@@ -21,10 +21,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Cleanup GitHub Container Registry
-        uses: lockerstock/github-actions/cleanup-ghcr
+        uses: lockerstock/github-actions/cleanup-ghcr@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          tags_to_keep: |
+            staging
+            latest
 ```
 
 <!-- action-docs-inputs -->
@@ -33,6 +42,12 @@ jobs:
 | parameter | description | required | default |
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
+| container_owner | Owner of container repository | `false` | ${{ github.repository_owner }} |
+| container_repository | Container Registry Repository | `false` | ${{ github.event.repository.name }} |
+| duration_to_keep | Duration of time to keep old images | `false` | 30d |
+| keep_git_tags | Boolean flag indicating that container tags matching git tags should be kept | `false` | true |
+| tags_to_keep | CSV list of container tags to explicitly keep | `false` |  |
+| delete_concurrently | Boolean flag to conditionally delete version candidates concurrently. Only turn this on if the expected number of delete candidates is small, otherwise the GitHub API will rate limit the action and cause it to fail with an error. | `false` | false |
 
 
 
