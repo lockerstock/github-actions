@@ -12,6 +12,22 @@ export async function deleteContainerVersions(
   client: Octokit,
   config: DeleteContainerVersions,
   containers: components['schemas']['package-version'][]
+): Promise<void> {
+  for (const container of containers) {
+    await deleteContainerVersion(client, config, container);
+  }
+}
+
+/**
+ * deleteContainerVersionsConcurrently
+ * Attempts to delete all provided Container Versions concurrently.
+ *
+ * NOTE: This is not currently used because a large number of delete candidates will cause the GitHub API to rate limit requests and fail the operation.
+ */
+export async function deleteContainerVersionsConcurrently(
+  client: Octokit,
+  config: DeleteContainerVersions,
+  containers: components['schemas']['package-version'][]
 ): Promise<OctokitResponse<never, 204>[]> {
   return Promise.all(
     containers.map(container =>

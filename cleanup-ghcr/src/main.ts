@@ -6,7 +6,10 @@ import {filterContainerVersions} from './filter-container-versions';
 import {listGitTags} from './list-git-tags';
 import {splitCSV} from './split.csv';
 import {parseDurationTimestamp} from './parse-duration-timestamp';
-import {deleteContainerVersions} from './delete-container-versions';
+import {
+  deleteContainerVersions,
+  deleteContainerVersionsConcurrently
+} from './delete-container-versions';
 import {appendContainerManifests} from './append-container-manifests';
 
 function setDebugInputs() {
@@ -23,6 +26,9 @@ async function run(): Promise<void> {
 
   const owner = core.getInput('container_owner', {required: true});
   const name = core.getInput('container_repository', {required: true});
+  const deleteConcurrently = core.getBooleanInput('delete_concurrently', {
+    required: false
+  });
   const keepGitTags = core.getBooleanInput('keep_git_tags', {required: false});
   const hardcodedTagsToKeep = splitCSV(
     core.getInput('tags_to_keep', {required: false})
@@ -95,7 +101,13 @@ async function run(): Promise<void> {
       })
     );
 
-    await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
+    deleteConcurrently
+      ? await deleteContainerVersionsConcurrently(
+          octokit,
+          {owner, name},
+          containersToDrop
+        )
+      : await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
   } catch (error) {
     core.setFailed(error as Error);
     return;

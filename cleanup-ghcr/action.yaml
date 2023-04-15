@@ -30,6 +30,11 @@ inputs:
     required: false
     default: ''
 
+  delete_concurrently:
+    description: Boolean flag to conditionally delete version candidates concurrently. Only turn this on if the expected number of delete candidates is small, otherwise the GitHub API will rate limit the action and cause it to fail with an error.
+    required: false
+    default: 'false'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
