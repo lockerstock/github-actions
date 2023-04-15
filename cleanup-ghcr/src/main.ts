@@ -90,7 +90,8 @@ async function run(): Promise<void> {
         noTagsLength: filtered.noTags.length,
         tagsToKeep,
         tagsKept: filtered.keep.map(kept => kept.metadata?.container?.tags),
-        dropped: containersToDrop.map(kept => kept.name)
+        dropped: containersToDrop.map(kept => kept.name),
+        droppedLength: containersToDrop.length
       })
     );
 
