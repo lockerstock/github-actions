@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Add Release Notes
-        uses: ./add-release-notes
+        uses: lockerstock/github-actions/add-release-notes
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: 'Deployment Instructions'

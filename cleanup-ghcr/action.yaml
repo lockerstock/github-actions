@@ -1,0 +1,50 @@
+name: Cleanup GitHub Container Registry
+description: Processes through all GitHub Container Registry images to determine which images to delete from the registry to cleanup unused and old images-.
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: true
+
+  container_owner:
+    description: Owner of container repository
+    required: false
+    default: ${{ github.repository_owner }}
+
+  github_repository:
+    description: Name of GitHub repository of differs from the Container Registry Repository. Used to check for git tags within the code repository
+    required: false
+    default: ${{ github.event.repository.name }}
+
+  container_repository:
+    description: Container Registry Repository
+    required: false
+    default: ${{ github.event.repository.name }}
+
+  duration_to_keep:
+    description: Duration of time to keep old images
+    required: false
+    default: 30d
+
+  keep_git_tags:
+    description: Boolean flag indicating that container tags matching git tags should be kept
+    required: false
+    default: 'true'
+
+  tags_to_keep:
+    description: CSV list of container tags to explicitly keep
+    required: false
+    default: ''
+
+  delete_concurrently:
+    description: Boolean flag to conditionally delete version candidates concurrently. Only turn this on if the expected number of delete candidates is small, otherwise the GitHub API will rate limit the action and cause it to fail with an error.
+    required: false
+    default: 'false'
+
+  dry_run:
+    description: Boolean flag to run the action dryly on not delete an container versions. Will also print container information for all found delete candidates. Used during implementation to make sure rules satisfy needs.
+    required: false
+    default: 'false'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

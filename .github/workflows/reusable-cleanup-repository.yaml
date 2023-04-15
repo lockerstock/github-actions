@@ -20,3 +20,27 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: ${{ matrix.environment }}
+
+  ghcr-cleanup:
+    runs-on: ubuntu-latest
+    name: Cleanup GitHub Container Registry
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: lockerstock/github-actions/cleanup-ghcr@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          keep_git_tags: true
+          duration_to_keep: '30d'
+          tags_to_keep: |
+            staging
+            latest

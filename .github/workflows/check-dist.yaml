@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'add-release-notes/**/*'
+      - 'cleanup-ghcr/**/*'
       - 'determine-environment/**/*'
       - 'delete-inactive-deployments/**/*'
       - 'package-has-version/**/*'
@@ -24,6 +25,7 @@ jobs:
       matrix:
         path:
           - 'add-release-notes'
+          - 'cleanup-ghcr'
           - 'determine-environment'
           - 'delete-inactive-deployments'
           - 'package-has-version'
