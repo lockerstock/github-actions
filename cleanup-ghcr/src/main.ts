@@ -82,7 +82,7 @@ async function run(): Promise<void> {
 
     const containersToDrop = filtered.drop.concat(noTagsToDrop);
 
-    core.info(
+    core.debug(
       JSON.stringify({
         length: containers.length,
         dropLength: filtered.drop.length,
@@ -95,7 +95,7 @@ async function run(): Promise<void> {
       })
     );
 
-    // await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
+    await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
   } catch (error) {
     core.setFailed(error as Error);
     return;
