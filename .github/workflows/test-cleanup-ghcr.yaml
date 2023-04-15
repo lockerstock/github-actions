@@ -1,0 +1,37 @@
+name: Test cleanup-ghcr
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'cleanup-ghcr/**/*'
+      - '.github/workflows/test-cleanup-ghcr.yaml'
+
+jobs:
+  test-cleanup-ghcr:
+    name: Test cleanup ghcr
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup GitHub Container Registry (dry)
+        id: short
+        uses: ./cleanup-ghcr
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          container_repository: github-actions/nginx
+          dry_run: true
+          tags_to_keep: |
+            staging
+            latest
