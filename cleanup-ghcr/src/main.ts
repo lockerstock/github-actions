@@ -15,6 +15,7 @@ import {appendContainerManifests} from './append-container-manifests';
 function setDebugInputs() {
   if (core.isDebug()) {
     process.env.INPUT_CONTAINER_OWNER = 'lockerstock';
+    process.env.INPUT_GITHUB_REPOSITORY = 'lockerstock-landing';
     process.env.INPUT_CONTAINER_REPOSITORY = 'lockerstock-landing';
     process.env.INPUT_KEEP_GIT_TAGS = 'true';
     process.env.INPUT_TAGS_TO_KEEP = 'latest , staging \n 47660a3, 9b04e11';
@@ -25,7 +26,8 @@ async function run(): Promise<void> {
   setDebugInputs();
 
   const owner = core.getInput('container_owner', {required: true});
-  const name = core.getInput('container_repository', {required: true});
+  const codeRepo = core.getInput('github_repository', {required: true});
+  const containerRepo = core.getInput('container_repository', {required: true});
   const dryRun = core.getBooleanInput('dry_run', {required: false});
   const deleteConcurrently = core.getBooleanInput('delete_concurrently', {
     required: false
@@ -42,7 +44,8 @@ async function run(): Promise<void> {
   core.debug(
     `Inputs: ${JSON.stringify({
       owner,
-      name,
+      codeRepo,
+      containerRepo,
       keepTimestamp,
       hardcodedTagsToKeep,
       keepGitTags
@@ -53,13 +56,16 @@ async function run(): Promise<void> {
 
   try {
     const gitTags = keepGitTags
-      ? await listGitTags(octokit, {owner, name})
+      ? await listGitTags(octokit, {owner, name: codeRepo})
       : [];
     const tagsToKeep = hardcodedTagsToKeep.concat(
       gitTags.map(gitTag => gitTag.tag)
     );
 
-    const containers = await listContainerVersions(octokit, {owner, name});
+    const containers = await listContainerVersions(octokit, {
+      owner,
+      name: containerRepo
+    });
 
     const filtered = filterContainerVersions(containers, {
       keepTimestamp,
@@ -68,7 +74,7 @@ async function run(): Promise<void> {
 
     const keepManifests = await appendContainerManifests(filtered.keep, {
       owner,
-      name
+      name: containerRepo
     });
 
     const keepContainerNames = keepManifests.reduce((names, container) => {
@@ -106,12 +112,12 @@ async function run(): Promise<void> {
       deleteConcurrently
         ? await deleteContainerVersionsConcurrently(
             octokit,
-            {owner, name},
+            {owner, name: containerRepo},
             containersToDrop
           )
         : await deleteContainerVersions(
             octokit,
-            {owner, name},
+            {owner, name: containerRepo},
             containersToDrop
           );
     } else {

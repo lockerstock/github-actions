@@ -10,6 +10,11 @@ inputs:
     required: false
     default: ${{ github.repository_owner }}
 
+  github_repository:
+    description: Name of GitHub repository of differs from the Container Registry Repository. Used to check for git tags within the code repository
+    required: false
+    default: ${{ github.event.repository.name }}
+
   container_repository:
     description: Container Registry Repository
     required: false
