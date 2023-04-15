@@ -118,7 +118,7 @@ async function run(): Promise<void> {
       core.info(
         `Container Versions to Delete (${
           containersToDrop.length
-        }):\n${containersToDrop
+        }):\n\t${containersToDrop
           .map(
             c =>
               `ID: ${c.id}, Name: ${c.name}, Tags: ${c.metadata?.container?.tags}`
