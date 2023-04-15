@@ -2,6 +2,12 @@ name: Cleanup Repository Resources
 
 on:
   workflow_call:
+    inputs:
+      skip_ghcr_cleanup:
+        description: Boolean flag to skip the ghcr-cleanup job. Should be used if the repository doesn't publish a package.
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   deployment-cleanup:
@@ -22,6 +28,7 @@ jobs:
           environment: ${{ matrix.environment }}
 
   ghcr-cleanup:
+    if: ${{ !inputs.skip_ghcr_cleanup }}
     runs-on: ubuntu-latest
     name: Cleanup GitHub Container Registry
 
