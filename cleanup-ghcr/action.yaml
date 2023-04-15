@@ -23,7 +23,7 @@ inputs:
   keep_git_tags:
     description: Boolean flag indicating that container tags matching git tags should be kept
     required: false
-    default: true
+    default: 'true'
 
   tags_to_keep:
     description: CSV list of container tags to explicitly keep

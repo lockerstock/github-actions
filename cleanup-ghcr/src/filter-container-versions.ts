@@ -2,12 +2,13 @@ import {components} from '@octokit/openapi-types';
 
 interface FilterContainerVersions {
   keepTimestamp: Date;
-  keepTags: string[];
+  tagsToKeep: string[];
 }
 
 interface Filtered {
   keep: components['schemas']['package-version'][];
   drop: components['schemas']['package-version'][];
+  noTags: components['schemas']['package-version'][];
 }
 
 /** filterContainerVersions
@@ -20,14 +21,14 @@ export function filterContainerVersions(
   return containers.reduce(
     (acc, container) => {
       if (container.metadata?.container?.tags.length === 0) {
-        acc.drop.push(container);
+        acc.noTags.push(container);
         return acc;
       }
 
       if (
         new Date(container.updated_at) < filters.keepTimestamp &&
-        !filters.keepTags.some(keepTag =>
-          container.metadata?.container?.tags.includes(keepTag)
+        !filters.tagsToKeep.some(tagToKeep =>
+          container.metadata?.container?.tags.includes(tagToKeep)
         )
       ) {
         acc.drop.push(container);
@@ -39,7 +40,8 @@ export function filterContainerVersions(
     },
     {
       keep: [],
-      drop: []
+      drop: [],
+      noTags: []
     } as Filtered
   );
 }

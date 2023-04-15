@@ -1,11 +1,13 @@
 import * as core from '@actions/core';
-import {Octokit} from 'octokit';
+import {Octokit} from '@octokit/core';
 import {listContainerVersions} from './list-container-versions';
 import {filterContainerVersions} from './filter-container-versions';
 
 import {listGitTags} from './list-git-tags';
 import {splitCSV} from './split.csv';
 import {parseDurationTimestamp} from './parse-duration-timestamp';
+import {deleteContainerVersions} from './delete-container-versions';
+import {appendContainerManifests} from './append-container-manifests';
 
 function setDebugInputs() {
   if (core.isDebug()) {
@@ -22,20 +24,22 @@ async function run(): Promise<void> {
   const owner = core.getInput('container_owner', {required: true});
   const name = core.getInput('container_repository', {required: true});
   const keepGitTags = core.getBooleanInput('keep_git_tags', {required: false});
-  const tagsToKeep = splitCSV(core.getInput('tags_to_keep', {required: false}));
+  const hardcodedTagsToKeep = splitCSV(
+    core.getInput('tags_to_keep', {required: false})
+  );
 
   const keepTimestamp = parseDurationTimestamp(
     core.getInput('duration_to_keep', {required: false}) || '30d'
   );
 
   core.debug(
-    JSON.stringify({
+    `Inputs: ${JSON.stringify({
       owner,
       name,
       keepTimestamp,
-      tagsToKeep,
+      hardcodedTagsToKeep,
       keepGitTags
-    })
+    })}`
   );
 
   const octokit = new Octokit({auth: core.getInput('token')});
@@ -44,24 +48,53 @@ async function run(): Promise<void> {
     const gitTags = keepGitTags
       ? await listGitTags(octokit, {owner, name})
       : [];
-    const keepTags = tagsToKeep.concat(gitTags.map(gitTag => gitTag.tag));
+    const tagsToKeep = hardcodedTagsToKeep.concat(
+      gitTags.map(gitTag => gitTag.tag)
+    );
 
     const containers = await listContainerVersions(octokit, {owner, name});
 
     const filtered = filterContainerVersions(containers, {
       keepTimestamp,
-      keepTags
+      tagsToKeep
     });
+
+    const keepManifests = await appendContainerManifests(filtered.keep, {
+      owner,
+      name
+    });
+
+    const keepContainerNames = keepManifests.reduce((names, container) => {
+      if (
+        container.manifest?.mediaType ===
+        'application/vnd.docker.distribution.manifest.list.v2+json'
+      ) {
+        names.push(
+          ...container.manifest.manifests.map(manifest => manifest.digest)
+        );
+      }
+      return names;
+    }, [] as string[]);
+
+    const noTagsToDrop = filtered.noTags.filter(
+      container => !keepContainerNames.includes(container.name)
+    );
+
+    const containersToDrop = filtered.drop.concat(noTagsToDrop);
 
     core.debug(
       JSON.stringify({
         length: containers.length,
         dropLength: filtered.drop.length,
         keepLength: filtered.keep.length,
-        keepTags,
-        tagsKept: filtered.keep.map(kept => kept.metadata?.container?.tags)
+        noTagsLength: filtered.noTags.length,
+        tagsToKeep,
+        tagsKept: filtered.keep.map(kept => kept.metadata?.container?.tags),
+        dropped: containersToDrop.map(kept => kept.name)
       })
     );
+
+    // await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
   } catch (error) {
     core.setFailed(error as Error);
     return;
