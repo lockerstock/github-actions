@@ -47,7 +47,7 @@ jobs:
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
 | container_owner | Owner of container repository | `false` | ${{ github.repository_owner }} |
-| github_repository | Name of GitHub repository of differs from the Container Registry Repository. Used to check for git tags within the code repository | `false` | ${{ github.event.repository.name }} |
+| github_repository | Name of GitHub repository if it differs from the Container Registry Repository. Used to check for git tags within the code repository | `false` | ${{ github.event.repository.name }} |
 | container_repository | Container Registry Repository | `false` | ${{ github.event.repository.name }} |
 | duration_to_keep | Duration of time to keep old images | `false` | 30d |
 | keep_git_tags | Boolean flag indicating that container tags matching git tags should be kept | `false` | true |
