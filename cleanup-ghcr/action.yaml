@@ -35,6 +35,11 @@ inputs:
     required: false
     default: 'false'
 
+  dry_run:
+    description: Boolean flag to run the action dryly on not delete an container versions. Will also print container information for all found delete candidates.
+    required: false
+    default: 'false'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

@@ -26,6 +26,7 @@ async function run(): Promise<void> {
 
   const owner = core.getInput('container_owner', {required: true});
   const name = core.getInput('container_repository', {required: true});
+  const dryRun = core.getBooleanInput('dry_run', {required: false});
   const deleteConcurrently = core.getBooleanInput('delete_concurrently', {
     required: false
   });
@@ -101,13 +102,30 @@ async function run(): Promise<void> {
       })
     );
 
-    deleteConcurrently
-      ? await deleteContainerVersionsConcurrently(
-          octokit,
-          {owner, name},
-          containersToDrop
-        )
-      : await deleteContainerVersions(octokit, {owner, name}, containersToDrop);
+    if (!dryRun) {
+      deleteConcurrently
+        ? await deleteContainerVersionsConcurrently(
+            octokit,
+            {owner, name},
+            containersToDrop
+          )
+        : await deleteContainerVersions(
+            octokit,
+            {owner, name},
+            containersToDrop
+          );
+    } else {
+      core.info(
+        `Container Versions to Delete (${
+          containersToDrop.length
+        }):\n${containersToDrop
+          .map(
+            c =>
+              `ID: ${c.id}, Name: ${c.name}, Tags: ${c.metadata?.container?.tags}`
+          )
+          .join('\n\t')}`
+      );
+    }
   } catch (error) {
     core.setFailed(error as Error);
     return;

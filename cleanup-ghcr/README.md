@@ -48,6 +48,7 @@ jobs:
 | keep_git_tags | Boolean flag indicating that container tags matching git tags should be kept | `false` | true |
 | tags_to_keep | CSV list of container tags to explicitly keep | `false` |  |
 | delete_concurrently | Boolean flag to conditionally delete version candidates concurrently. Only turn this on if the expected number of delete candidates is small, otherwise the GitHub API will rate limit the action and cause it to fail with an error. | `false` | false |
+| dry_run | Boolean flag to run the action dryly on not delete an container versions. Will also print container information for all found delete candidates. | `false` | false |
 
 
 
