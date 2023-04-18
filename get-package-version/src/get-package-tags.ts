@@ -7,11 +7,12 @@ interface GetPackageTags {
   name: string;
   type: components['schemas']['package']['package_type'];
   constraint: string;
+  timestamp: Date;
 }
 
 export async function getPackageTags(
   client: Octokit,
-  {owner, name, type, constraint}: GetPackageTags,
+  {owner, name, type, constraint, timestamp}: GetPackageTags,
   page = 0
 ): Promise<string[]> {
   const {data} = await client.request(
@@ -27,7 +28,10 @@ export async function getPackageTags(
 
   const tags: string[] = data.reduce((acc, version) => {
     for (const tag of version.metadata?.container?.tags ?? []) {
-      if (semverSatisfies(tag, constraint)) {
+      if (
+        semverSatisfies(tag, constraint) &&
+        new Date(version.created_at) <= timestamp
+      ) {
         acc.push(tag);
       }
     }
@@ -36,7 +40,11 @@ export async function getPackageTags(
 
   if (data.length === 100) {
     return tags.concat(
-      await getPackageTags(client, {owner, name, type, constraint}, page + 1)
+      await getPackageTags(
+        client,
+        {owner, name, type, constraint, timestamp},
+        page + 1
+      )
     );
   }
 

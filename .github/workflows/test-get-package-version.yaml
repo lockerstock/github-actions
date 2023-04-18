@@ -22,6 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/nginx
           package_version_constraint: latest
+          timestamp_constraint: ${{ github.ref_type = 'tag' && github.event.head_commit.timestamp }}
 
       - name: 'Latest Package Results'
         run: |

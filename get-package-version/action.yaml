@@ -24,6 +24,11 @@ inputs:
     required: false
     default: 'latest'
 
+  timestamp_constraint:
+    description: Provided timestamp constraint to restrict ranged semver constraints to. Providing this input allows version constraints such as `latest` only find versions that were released prior to the timestamp. Will only constrain by timestamp if provided.
+    required: false
+    default: '' # ${{ github.event.head_commit.timestamp }}
+
   error_on_not_found:
     description: Boolean flag to have action terminate with error if the package is not found or if a version is not located for given constraint.
     required: false
