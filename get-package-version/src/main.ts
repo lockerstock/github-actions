@@ -49,7 +49,7 @@ async function run(): Promise<void> {
 
   const errorOnNotFound = core.getBooleanInput('error_on_not_found');
 
-  core.info(
+  core.debug(
     JSON.stringify({
       packageName,
       packageOwner,
