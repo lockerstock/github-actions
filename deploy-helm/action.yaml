@@ -207,7 +207,7 @@ runs:
 
     - name: Build Package
       if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
-      run: helm package ${{ inputs.chart_path }}
+      run: helm package oci://${{ steps.chart.outputs.source }}
       shell: bash
 
     - name: Add packaged chart to release
@@ -215,7 +215,7 @@ runs:
       run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.package.outputs.version }}.tgz" --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
-        CHART_PATH: ${{ inputs.chart_path }}
+        CHART_PATH: ${{ steps.chart.outputs.source }}
       shell: bash
 
     - name: Add prepared values.yaml to release
