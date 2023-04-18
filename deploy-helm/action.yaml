@@ -110,6 +110,7 @@ runs:
         package_name: ${{ steps.chart.outputs.source_package }}
         package_type: container
         package_version_constraint: ${{ steps.chart.outputs.version_constraint }}
+        timestamp_constraint: ${{ github.ref_type == 'tag' && github.event.head_commit.timestamp || '' }}
 
     - name: Version
       id: version

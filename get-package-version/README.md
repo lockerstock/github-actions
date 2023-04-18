@@ -26,6 +26,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/nginx
           package_version_constraint: '>=0.1.0 <1'
+          timestamp_constraint: ${{ github.ref_type == 'tag' && github.event.head_commit.timestamp || '' }}
 
       - name: 'Outputs'
         run: |
@@ -44,6 +45,7 @@ jobs:
 | package_owner | Package owner | `false` | ${{ github.repository_owner }} |
 | package_type | Type of package within package registry | `false` | container |
 | package_version_constraint | Provided version constraints to search the package for. See [specification](https://github.com/npm/node-semver#versions) on possible constraints. | `false` | latest |
+| timestamp_constraint | Provided timestamp constraint to restrict ranged semver constraints to. Providing this input allows version constraints such as `latest` only find versions that were released prior to the timestamp. Will only constrain by timestamp if provided. | `false` |  |
 | error_on_not_found | Boolean flag to have action terminate with error if the package is not found or if a version is not located for given constraint. | `false` | true |
 
 

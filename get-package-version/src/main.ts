@@ -38,6 +38,15 @@ async function run(): Promise<void> {
   if (packageVersionConstraint === 'latest') {
     packageVersionConstraint = '>=0.0.0';
   }
+
+  const timestampConstraintInput = core.getInput('timestamp_constraint', {
+    required: false
+  });
+  const timestampConstraint =
+    timestampConstraintInput === ''
+      ? new Date()
+      : new Date(timestampConstraintInput);
+
   const errorOnNotFound = core.getBooleanInput('error_on_not_found');
 
   core.debug(
@@ -45,7 +54,9 @@ async function run(): Promise<void> {
       packageName,
       packageOwner,
       packageVersionConstraint,
-      packageType
+      packageType,
+      timestampConstraintInput,
+      timestampConstraint
     })
   );
 
@@ -73,7 +84,8 @@ async function run(): Promise<void> {
       owner: packageOwner,
       name: packageName,
       type: packageType as components['schemas']['package']['package_type'],
-      constraint: packageVersionConstraint
+      constraint: packageVersionConstraint,
+      timestamp: timestampConstraint
     })
   );
   core.debug(JSON.stringify({tags}));
