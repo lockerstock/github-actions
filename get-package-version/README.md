@@ -26,7 +26,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: github-actions/nginx
           package_version_constraint: '>=0.1.0 <1'
-          timestamp_constraint: '${{ github.event.head_commit.timestamp }}'
+          timestamp_constraint: ${{ github.ref_type == 'tag' && github.event.head_commit.timestamp || '' }}
 
       - name: 'Outputs'
         run: |
