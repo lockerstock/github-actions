@@ -197,12 +197,7 @@ runs:
       if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
       run: helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
-
-    - name: Build Package
-      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
-      run: helm package ${{ inputs.chart_path }}
-      shell: bash
-
+      
     - name: Add template to release
       if: github.ref_type == 'tag'
       run: gh release upload ${{ github.ref_name }} ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml --clobber
@@ -210,9 +205,14 @@ runs:
         GH_TOKEN: ${{ inputs.token }}
       shell: bash
 
+    - name: Build Package
+      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
+      run: helm package ${{ inputs.chart_path }}
+      shell: bash
+
     - name: Add packaged chart to release
-      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
-      run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.version.outputs.variable }}.tgz" --clobber
+      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
+      run: gh release upload ${{ github.ref_name }} "${CHART_PATH##*/}-${{ steps.package.outputs.version }}.tgz" --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
         CHART_PATH: ${{ inputs.chart_path }}
