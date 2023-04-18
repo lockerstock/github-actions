@@ -198,7 +198,7 @@ runs:
       run: helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
       
-     - name: Add template to release
+    - name: Add template to release
       if: github.ref_type == 'tag'
       run: gh release upload ${{ github.ref_name }} ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml --clobber
       env:
