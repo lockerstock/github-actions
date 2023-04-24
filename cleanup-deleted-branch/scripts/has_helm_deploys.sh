@@ -5,7 +5,7 @@ VAR_NAME=$2
 
 OUTPUT="false"
 
-if [[ $(kubectl get secrets --namespace $NAMESPACE -o name | grep sh.helm.release) ]]; then
+if [[ $(helm list --namespace $NAMESPACE --no-headers) ]]; then
     OUTPUT="true"
 fi
 

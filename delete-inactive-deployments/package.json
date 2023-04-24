@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "delete-inactive-deployments",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Deletes all inactive GitHub deployments from a given environment.",
   "main": "src/main.ts",
   "scripts": {
     "execute": "ts-node src/main.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "https://github.com/lockerstock/github-actions/tree/main/delete-inactive-deployments"
   },
   "keywords": [
     "actions",
