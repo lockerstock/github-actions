@@ -47,13 +47,13 @@ runs:
       run: kubectl label namespace ${{ steps.namespace.outputs.name }} ${{ github.repository }}-
       shell: bash
 
-    - name: Get Helm Secrets
+    - name: Get Helm Deploys
       if: steps.namespace.outputs.exists == 'true'
-      id: secrets
-      run: ${{ github.action_path }}/scripts/has_helm_secrets.sh "${{ steps.namespace.outputs.name }}" exists
+      id: deploys
+      run: ${{ github.action_path }}/scripts/has_helm_deploys.sh "${{ steps.namespace.outputs.name }}" exists
       shell: bash
 
     - name: Delete Namespace
-      if: steps.namespace.outputs.exists == 'true' && steps.secrets.outputs.exists != 'true'
+      if: steps.namespace.outputs.exists == 'true' && steps.deploys.outputs.exists != 'true'
       run: kubectl delete namespace "${{ steps.namespace.outputs.name }}"
       shell: bash
