@@ -89,6 +89,15 @@ jobs:
             BUF_USER=${{ secrets.BUF_USER }}
             BUF_TOKEN=${{ secrets.BUF_TOKEN }}
 
+      - name: Failed Deployment
+        uses: lockerstock/github-actions/deployment-status@main
+        if: failure()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          step: finish
+          environment: ${{ steps.docker.outputs.environment }}
+
   deploy:
     name: Deploy Helm Chart
     runs-on:
