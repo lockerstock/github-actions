@@ -1,11 +1,11 @@
 apiVersion: v2
-name: source-example
+name: oci-example
 description: A Helm chart for Kubernetes
 
 annotations:
   # This is the Helm chart source from a centralized registry.
   # The values.yaml co-located with this file will be supplied into the source Helm repository
-  source: 'ghcr.io/lockerstock/github-actions/base-nginx'
+  oci: 'ghcr.io/lockerstock/github-actions/base-nginx'
 
 # A chart can be either an 'application' or a 'library' chart.
 #
