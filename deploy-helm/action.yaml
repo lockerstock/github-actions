@@ -91,7 +91,7 @@ runs:
         package_owner: ${{ steps.chart.outputs.oci_source_owner }}
         package_name: ${{ steps.chart.outputs.oci_source_package }}
         package_type: container
-        package_version_constraint: ${{ steps.chart.outputs.oci_version_constraint }}
+        package_version_constraint: ${{ steps.chart.outputs.version_constraint }}
         timestamp_constraint: ${{ github.ref_type == 'tag' && github.event.head_commit.timestamp || '' }}
 
     - name: Version
