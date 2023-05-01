@@ -6,6 +6,8 @@ Prepares and installs a Helm chart to determined Namespace
 
 <!-- action-docs-description -->
 
+> Currently supports OCI and Repository hosted Helm charts. However, this action does not make the determination and if both are provided, then both will be deployed in sequential order from OCI to Repository.
+
 ## Example Usage
 
 ```yaml
