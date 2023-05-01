@@ -12,8 +12,6 @@ on:
         required: true
       GHA_ACCESS_TOKEN:
         required: true
-      BUF_USER:
-        required: true
       BUF_TOKEN:
         required: true
 
