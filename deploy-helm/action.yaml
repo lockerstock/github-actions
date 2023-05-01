@@ -47,7 +47,7 @@ outputs:
 
   chart_version:
     description: 'Version of the Helm chart that was deployed'
-    value: ${{ steps.version.outputs.variable }}
+    value: ${{ steps.repo_version.outputs.version || steps.package.outputs.version || steps.version.outputs.variable }}
 
   hostname:
     description: 'Hostname provided to deployed Helm chart'
@@ -79,35 +79,17 @@ runs:
 
     - name: Get Chart Information
       id: chart
-      run: |
-        SOURCE="$(yq e '.annotations.source // ""' Chart.yaml)"
-
-        if [[ $SOURCE == oci://* ]]; then
-          SOURCE="${SOURCE#oci://}"
-        fi
-
-        echo "source=$SOURCE" >> $GITHUB_OUTPUT
-
-        if [ -n "$SOURCE" ]; then
-          SOURCE_OWNER=$(substring=${SOURCE#*/}; echo ${substring%%/*})
-          echo "source_owner=$SOURCE_OWNER" >> $GITHUB_OUTPUT
-
-          SOURCE_PACKAGE=$(substring=${SOURCE#*/}; echo ${substring#*/})
-          echo "source_package=$SOURCE_PACKAGE" >> $GITHUB_OUTPUT
-        fi
-
-        echo "version_constraint=$(yq e '.version' Chart.yaml)" >> $GITHUB_OUTPUT
-      working-directory: ${{ inputs.chart_path }}
+      run: ${{ github.action_path }}/scripts/chart-info.sh "${{ inputs.chart_path }}"
       shell: bash
 
     - name: Get Source Version
-      if: steps.chart.outputs.source != ''
+      if: steps.chart.outputs.has_oci == 'true'
       id: package
       uses: lockerstock/github-actions/get-package-version@main
       with:
         token: ${{ inputs.token }}
-        package_owner: ${{ steps.chart.outputs.source_owner }}
-        package_name: ${{ steps.chart.outputs.source_package }}
+        package_owner: ${{ steps.chart.outputs.oci_source_owner }}
+        package_name: ${{ steps.chart.outputs.oci_source_package }}
         package_type: container
         package_version_constraint: ${{ steps.chart.outputs.version_constraint }}
         timestamp_constraint: ${{ github.ref_type == 'tag' && github.event.head_commit.timestamp || '' }}
@@ -131,11 +113,6 @@ runs:
       env:
         NAMESPACE: ${{ steps.namespace.outputs.namespace }}
 
-    - name: Update versions
-      run: yq --inplace '.version = "${{ steps.package.outputs.version || steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
-      working-directory: ${{ inputs.chart_path }}
-      shell: bash
-
     - name: Update values
       run: |
         yq --inplace '.image.tag = "${{ inputs.image_tag }}", .environment = "${{ steps.version.outputs.environment }}"' values.yaml
@@ -147,8 +124,14 @@ runs:
 
     ##### Deploy Helm Chart from acting repository #####
 
+    - name: Update versions
+      if: steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
+      run: yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
+      working-directory: ${{ inputs.chart_path }}
+      shell: bash
+
     - name: Helm Deploy
-      if: steps.chart.outputs.source == ''
+      if: steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
       run: |
         helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
@@ -157,17 +140,17 @@ runs:
           --timeout=${{ inputs.timeout }}
       shell: bash
 
-    ##### Deploy Helm Chart from remote repository #####
+    ##### Deploy Helm Chart from OCI Registry #####
 
     - name: Login to Helm Registry
-      if: steps.chart.outputs.source != ''
+      if: steps.chart.outputs.has_oci == 'true'
       run: echo ${{ inputs.token }} | helm registry login ghcr.io --username ${{ inputs.actor }} --password-stdin
       shell: bash
 
-    - name: Helm Deploy from Remote
-      if: steps.chart.outputs.source != ''
+    - name: Helm Deploy from Registry
+      if: steps.chart.outputs.has_oci == 'true'
       run: |
-        helm upgrade --install ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.source }} \
+        helm upgrade --install ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.oci }} \
           --version ${{ steps.package.outputs.version }} \
           -f ${{ inputs.chart_path }}/values.yaml \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
@@ -176,26 +159,63 @@ runs:
           --timeout=${{ inputs.timeout }}
       shell: bash
 
+    ##### Deploy Helm Chart from remote repository #####
+
+    - name: Install Helm Repository
+      if: steps.chart.outputs.has_repo == 'true'
+      run: helm repo add ${{ github.repository_owner }} ${{ steps.chart.outputs.repository }}
+      shell: bash
+
+    - name: Helm Deploy from Repository
+      if: steps.chart.outputs.has_repo == 'true'
+      run: |
+        helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }} \
+          --version "${{ steps.chart.outputs.version_constraint }}" \
+          -f ${{ inputs.chart_path }}/values.yaml \
+          --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
+          --wait=${{ inputs.wait }} \
+          --wait-for-jobs=${{ inputs.wait_for_jobs }} \
+          --timeout=${{ inputs.timeout }}
+      shell: bash
+
+    - name: Output installed version
+      id: repo_version
+      if: steps.chart.outputs.has_repo == 'true'
+      run: |
+        VERSION=$(helm show chart ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }} --version "${{ steps.chart.outputs.version_constraint }}" | yq -e '.version')
+
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+      shell: bash
+
     ##### Prepare and attach Helm charts to release #####
 
     - name: Build Template From Repository
-      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci != 'true'
       run: |
         helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
-    - name: Build Template From Remote Repository
-      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
+    - name: Build Template From Remote OCI Registry
+      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci == 'true'
       run: |
-        helm template ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.source }} \
+        helm template ${{ steps.repository.outputs.variable }} oci://${{ steps.chart.outputs.oci }} \
           --version ${{ steps.package.outputs.version }} \
           -f ${{ inputs.chart_path }}/values.yaml \
           > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
+    - name: Build Template From Remote Repository
+      if: github.ref_type == 'tag' && steps.chart.outputs.has_repo == 'true'
+      run: |
+        helm template ${{ steps.repository.outputs.variable }} ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }} \
+          --version "${{ steps.chart.outputs.version_constraint }}" \
+          -f ${{ inputs.chart_path }}/values.yaml \
+          > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
+      shell: bash
+
     - name: Build Template From Repository
-      if: github.ref_type == 'tag' && steps.chart.outputs.source == ''
+      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci != 'true'
       run: helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
@@ -207,7 +227,7 @@ runs:
       shell: bash
 
     - name: Add prepared values.yaml to release
-      if: github.ref_type == 'tag' && steps.chart.outputs.source != ''
+      if: github.ref_type == 'tag' && (steps.chart.outputs.has_oci == 'true' || steps.chart.outputs.has_repo == 'true')
       run: gh release upload ${{ github.ref_name }} values.yaml --clobber
       env:
         GH_TOKEN: ${{ inputs.token }}
