@@ -32,12 +32,22 @@ jobs:
       - name: 'Chart Version: ${{ steps.deploy.outputs.chart_version }}'
         run: echo "${{ steps.deploy.outputs.chart_version }}"
 
-      - name: Helm deploy from remote
-        id: source-deploy
+      - name: Helm deploy from OCI registry
+        id: oci-deploy
         uses: ./deploy-helm
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          chart_path: deploy-helm/charts/source-example
+          chart_path: deploy-helm/charts/oci-example
 
-      - name: 'Remote Chart Version: ${{ steps.source-deploy.outputs.chart_version }}'
-        run: echo "${{ steps.source-deploy.outputs.chart_version }}"
+      - name: 'OCI Registry Chart Version: ${{ steps.oci-deploy.outputs.chart_version }}'
+        run: echo "${{ steps.oci-deploy.outputs.chart_version }}"
+
+      - name: Helm deploy from repository
+        id: repo-deploy
+        uses: ./deploy-helm
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          chart_path: deploy-helm/charts/repo-example
+
+      - name: 'Repository Chart Version: ${{ steps.repo-deploy.outputs.chart_version }}'
+        run: echo "${{ steps.repo-deploy.outputs.chart_version }}"
