@@ -24,6 +24,8 @@ fi
 
 VERSION_CONSTRAINT=$(yq e '.version' $CHART_PATH)
 
+echo "oci_version_constraint=$VERSION_CONSTRAINT" >> $GITHUB_OUTPUT
+
 if [[ $VERSION_CONSTRAINT == "latest" ]]; then 
     VERSION_CONSTRAINT=">=v0.0.0"
 fi
