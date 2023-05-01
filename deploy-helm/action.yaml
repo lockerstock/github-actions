@@ -47,7 +47,7 @@ outputs:
 
   chart_version:
     description: 'Version of the Helm chart that was deployed'
-    value: ${{ steps.version.outputs.variable }}
+    value: ${{ steps.repo_version.outputs.version || steps.package.outputs.version || steps.version.outputs.variable }}
 
   hostname:
     description: 'Hostname provided to deployed Helm chart'
@@ -113,11 +113,6 @@ runs:
       env:
         NAMESPACE: ${{ steps.namespace.outputs.namespace }}
 
-    - name: Update versions
-      run: yq --inplace '.version = "${{ steps.package.outputs.version || steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
-      working-directory: ${{ inputs.chart_path }}
-      shell: bash
-
     - name: Update values
       run: |
         yq --inplace '.image.tag = "${{ inputs.image_tag }}", .environment = "${{ steps.version.outputs.environment }}"' values.yaml
@@ -128,6 +123,12 @@ runs:
         HOSTNAME: ${{ steps.hostname.outputs.value }}
 
     ##### Deploy Helm Chart from acting repository #####
+
+    - name: Update versions
+      if: steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
+      run: yq --inplace '.version = "${{ steps.version.outputs.variable }}" | .appVersion = "${{ steps.version.outputs.variable }}"' Chart.yaml
+      working-directory: ${{ inputs.chart_path }}
+      shell: bash
 
     - name: Helm Deploy
       if: steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
@@ -177,6 +178,14 @@ runs:
           --timeout=${{ inputs.timeout }}
       shell: bash
 
+    - name: Output installed version
+      id: repo_version
+      if: steps.chart.outputs.has_repo == 'true'
+      run: |
+        VERSION=$(helm show chart ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }} --version "${{ steps.chart.outputs.version_constraint }}" | yq -e '.version')
+
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+      shell: bash
 
     ##### Prepare and attach Helm charts to release #####
 
