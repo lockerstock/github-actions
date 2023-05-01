@@ -130,7 +130,7 @@ runs:
     ##### Deploy Helm Chart from acting repository #####
 
     - name: Helm Deploy
-      if: steps.chart.outputs.has_oci != 'true'
+      if: steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
       run: |
         helm upgrade --install ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           --namespace ${{ steps.namespace.outputs.namespace }} --create-namespace \
