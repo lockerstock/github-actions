@@ -20,9 +20,6 @@ on:
       GHA_ACCESS_TOKEN:
         required: false
         description: 'Required for Golang services to download private Go modules during Docker image builds.'
-      BUF_USER:
-        required: false
-        description: 'Required for Golang services to access private Buf registries during Docker image builds.'
       BUF_TOKEN:
         required: false
         description: 'Required for Golang and frontend services to access private Buf registries during Docker image builds.'
@@ -84,9 +81,7 @@ jobs:
             "org.opencontainers.image.sha=${{ github.sha }}"
           build-args: |
             RELEASE_VERSION=${{ steps.docker.outputs.image_tag }}
-            ACTOR=${{ secrets.GHA_ACCESS_USER }}
             ACCESS_TOKEN=${{ secrets.GHA_ACCESS_TOKEN }}
-            BUF_USER=${{ secrets.BUF_USER }}
             BUF_TOKEN=${{ secrets.BUF_TOKEN }}
 
       - name: Failed Deployment

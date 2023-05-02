@@ -12,8 +12,6 @@ on:
         required: true
       GHA_ACCESS_TOKEN:
         required: true
-      BUF_USER:
-        required: true
       BUF_TOKEN:
         required: true
 
@@ -77,7 +75,9 @@ jobs:
           go-version: ${{ inputs.go-version }}
 
       - name: Setup Private Modules
-        run: git config --global url."https://${{ secrets.GHA_ACCESS_USER }}:${{ secrets.GHA_ACCESS_TOKEN }}@github.com".insteadOf "https://github.com"
+        run: |
+          go env -w GOPRIVATE=github.com/${{ github.repository_owner }}/*
+          git config --global url."https://${ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
 
       - name: Install dependencies
         run: go mod download
