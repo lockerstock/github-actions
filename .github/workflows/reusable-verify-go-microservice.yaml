@@ -77,7 +77,7 @@ jobs:
       - name: Setup Private Modules
         run: |
           go env -w GOPRIVATE=github.com/${{ github.repository_owner }}/*
-          git config --global url."https://${ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
+          git config --global url."https://${{ secrets.GHA_ACCESS_TOKEN }}:x-oauth-basic@github.com".insteadOf "https://github.com"
 
       - name: Install dependencies
         run: go mod download
