@@ -12,7 +12,7 @@ async function run(): Promise<void> {
   });
   let exists = false;
 
-  core.startGroup('inputs');
+  core.startGroup('Inputs');
   core.info(JSON.stringify({repo, owner, tag, errorOnNotFound}, null, 2));
   core.endGroup();
 
@@ -37,7 +37,7 @@ async function run(): Promise<void> {
     }
   }
 
-  core.startGroup('outputs');
+  core.startGroup('Outputs');
   core.info(JSON.stringify({exists}, null, 2));
   core.endGroup();
 
