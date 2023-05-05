@@ -1,0 +1,33 @@
+name: Git Tag Exists
+description: Checks if given tags exist within a repository. Can optionally terminate with an error if not found.
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  repository:
+    description: Name of repository to check for given tag.
+    required: false
+    default: ${{ github.event.repository.name }}
+
+  owner:
+    description: Owner of repository
+    required: false
+    default: ${{ github.repository_owner }}
+
+  tag: 
+    description: Tag to search for
+    required: true
+
+  error_on_not_found:
+    description: Boolean flag to have action terminate with error if the tag is not found
+    required: false
+    default: 'false'
+
+outputs:
+  exists:
+    description: Boolean value indicating whether or not the provided tag was found.
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

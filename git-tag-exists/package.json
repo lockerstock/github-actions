@@ -1,0 +1,27 @@
+{
+  "name": "git-tag-exists",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Utilize GitHub's octokit to check if repository has a given tag.",
+  "main": "dist/index.js",
+  "scripts": {
+    "execute": "ts-node src/main.ts",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint . --ext .ts,.tsx",
+    "package": "ncc build -m src/main.ts",
+    "test": "mocha -r ts-node/register -t 120s 'tests/*.test.ts'",
+    "all": "npm run format && npm run lint && npm run package && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lockerstock/github-actions/git-tag-exists.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "author": "lockerstock",
+  "license": "MIT"
+}
