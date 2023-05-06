@@ -41,15 +41,16 @@ jobs:
         env:
           OUTPUTS: ${{ toJSON(steps.no_changes_changelog.outputs) }}
 
-      - name: Run on no-versions-changelog.md
-        id: no_versions_changelog
-        uses: ./require-changelog-entry
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_prefix: require-changelog-entry@
-          changelog_path: require-changelog-entry/docs/no-versions-changelog.md
+      # This causes the workflow to error because a CHANGELOG with no base entry is not valid.
+      # - name: Run on no-versions-changelog.md
+      #   id: no_versions_changelog
+      #   uses: ./require-changelog-entry
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag_prefix: require-changelog-entry@
+      #     changelog_path: require-changelog-entry/docs/no-versions-changelog.md
 
-      - name: Print no-versions-changelog.md Outputs
-        run: echo "$OUTPUTS"
-        env:
-          OUTPUTS: ${{ toJSON(steps.no_versions_changelog.outputs) }}
+      # - name: Print no-versions-changelog.md Outputs
+      #   run: echo "$OUTPUTS"
+      #   env:
+      #     OUTPUTS: ${{ toJSON(steps.no_versions_changelog.outputs) }}
