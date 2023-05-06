@@ -1,13 +1,10 @@
 <!-- action-docs-description -->
-<!-- action-docs-description -->
 
-Logic path:
-- Retrieve latest changelog entry via https://github.com/mindsers/changelog-reader-action (set validation_depth to 1, and leave version blank)
-- Check tags of repo for matching version, if no matching version is found, all is good and return cleanly
-- if matching version is found, this means that this is not a new version
-- Checkout the default branch of the repo and use https://github.com/mindsers/changelog-reader-action to pull the "Unreleased" entry of both
-- If the description is the different, all is good and return cleanly
-- If the description is the same as the default branch version, then no changes have been made and return with an error
+## Description
+
+Checks the CHANGELOG for either new version entry or an updated entry to the "Unreleased" section.
+
+<!-- action-docs-description -->
 
 ## Example Usage
 
@@ -16,10 +13,40 @@ Logic path:
 ```
 
 <!-- action-docs-inputs -->
+
+## Inputs
+
+| parameter      | description                                                             | required | default                                       |
+| -------------- | ----------------------------------------------------------------------- | -------- | --------------------------------------------- |
+| token          | GITHUB_TOKEN to access the GitHub API if the repository is private      | `false`  |                                               |
+| default_branch | Default branch to compare the "Unreleased" section of the CHANGELOG to. | `false`  | ${{ github.event.repository.default_branch }} |
+| tag_prefix     | Optional prefix string to apply to tag search                           | `false`  |                                               |
+| tag_suffix     | Optional suffix string to apply to tag search                           | `false`  |                                               |
+| changelog_path | Path to CHANGELOG file within repository                                | `false`  | CHANGELOG.md                                  |
+
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
+## Outputs
+
+| parameter                | description                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| has_changed              | Boolean output indicating whether the CHANGELOG file has changed                        |
+| has_new_version          | Boolean output indicating whether a new, untagged version was found in the CHANGELOG    |
+| has_unreleased           | Boolean output indicating whether the "Unreleased" section of the CHANGELOG has changed |
+| changelog_latest_version | Latest as-is CHANGELOG version entry.                                                   |
+| prepared_latest_version  | Latest prefix/suffix prepared CHANGELOG version entry.                                  |
+| latest_version_entry     | The contents of the latest CHANGELOG version entry                                      |
+| current_unreleased_entry | The contents of the current "Unreleased" section in the CHANGELOG                       |
+| default_unreleased_entry | The contents of the default branch "Unreleased" section in the CHANGELOG                |
+
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
+## Runs
+
+This action is a `composite` action.
+
 <!-- action-docs-runs -->
