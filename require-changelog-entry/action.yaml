@@ -1,0 +1,142 @@
+name: 'Require Changelog Entry'
+description: 'Checks the CHANGELOG for either new version entry or an updated entry to the "Unreleased" section.'
+
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: false
+
+  default_branch:
+    description: Default branch to compare the "Unreleased" section of the CHANGELOG to.
+    default: ${{ github.event.repository.default_branch }}
+    required: false
+
+  tag_prefix:
+    description: Optional prefix string to apply to tag search
+    required: false
+    default: ''
+
+  tag_suffix:
+    description: Optional suffix string to apply to tag search
+    required: false
+    default: ''
+
+  changelog_path:
+    description: Path to CHANGELOG file within repository
+    required: false
+    default: 'CHANGELOG.md'
+
+outputs:
+  has_changed:
+    description: 'Boolean output indicating whether the CHANGELOG file has changed'
+    value: ${{ steps.changes.outputs.changelog }}
+
+  has_new_version:
+    description: 'Boolean output indicating whether a new, untagged version was found in the CHANGELOG'
+    value: ${{ steps.tag.outputs.exists == 'false' }}
+
+  changelog_version_exists:
+    description: 'Boolean flag indicating whether the latest CHANGELOG version exists as a git tag.'
+    value: ${{ steps.tag.outputs.exists }}
+
+  has_unreleased:
+    description: 'Boolean output indicating whether the "Unreleased" section of the CHANGELOG has changed'
+    value: ${{ steps.unreleased.outputs.changed }}
+
+  changelog_latest_version:
+    description: 'Latest as-is CHANGELOG version entry.'
+    value: ${{ steps.current_latest.outputs.version }}
+
+  prepared_latest_version:
+    description: 'Latest prefix/suffix prepared CHANGELOG version entry.'
+    value: ${{ steps.prepared_latest.outputs.version }}
+
+  latest_version_entry:
+    description: 'The contents of the latest CHANGELOG version entry'
+    value: ${{ steps.current_latest.outputs.changes }}
+
+  current_unreleased_entry:
+    description: 'The contents of the current "Unreleased" section in the CHANGELOG'
+    value: ${{ steps.current_unreleased.outputs.changes }}
+
+  default_unreleased_entry:
+    description: 'The contents of the default branch "Unreleased" section in the CHANGELOG'
+    value: ${{ steps.default_unreleased.outputs.changes }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          changelog:
+            - '${{ inputs.changelog_path }}'
+
+    ###### Checkout Repository Refs to action_path ######
+
+    - name: Checkout Repository at current ref
+      uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.token }}
+        path: ${{ github.action_path }}/current
+
+    - name: Checkout Repository at default branch
+      uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.token }}
+        ref: ${{ inputs.default_branch }}
+        path: ${{ github.action_path }}/default
+
+    ###### Retrieve latest and Unreleased entries from CHANGELOGs ######
+
+    - name: Get Current Latest Changelog Entry
+      id: current_latest
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        validation_level: none
+        path: ${{ github.action_path }}/current/${{ inputs.changelog_path }}
+
+    - name: Get Current Unreleased Changelog Entry
+      id: current_unreleased
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        validation_level: none
+        path: ${{ github.action_path }}/current/${{ inputs.changelog_path }}
+        version: Unreleased
+
+    - name: Get Default Unreleased Changelog Entry
+      id: default_unreleased
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        validation_level: none
+        path: ${{ github.action_path }}/default/${{ inputs.changelog_path }}
+        version: Unreleased
+
+    ###### Prepare Latest Tag ######
+
+    - name: Prepare Latest Tag
+      id: prepared_latest
+      run: echo "version=${{ inputs.tag_prefix }}${{ steps.current_latest.outputs.version }}${{ inputs.tag_suffix }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    ###### Check for Existing Tag ######
+
+    - name: Check if tag already exists
+      uses: lockerstock/github-actions/git-tag-exists@main
+      id: tag
+      with:
+        token: ${{ inputs.token }}
+        tag: ${{ steps.prepared_latest.outputs.version }}
+
+    ###### Output Unreleased Changes ######
+
+    - name: Check for "Unreleased" Changes
+      id: unreleased
+      run: |
+        if [ "${{ steps.current_unreleased.outputs.changes }}" = "${{ steps.default_unreleased.outputs.changes }}" ]; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+        fi
+      shell: bash

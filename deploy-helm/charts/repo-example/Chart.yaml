@@ -3,10 +3,10 @@ name: repo-example
 description: A Helm chart for Kubernetes
 
 annotations:
-  # The following "repository" and "chart" annotations determine the centralized, remote Helm repository to pull the chart from. 
+  # The following "repository" and "chart" annotations determine the centralized, remote Helm repository to pull the chart from.
   # The values.yaml co-located with this file will be supplied into the source Helm repository.
   repository: 'https://helm.lockerstock.io'
-  chart: 'base-nginx'
+  chart: 'microservice'
 
 # A chart can be either an 'application' or a 'library' chart.
 #
