@@ -1,0 +1,55 @@
+name: Test require-changelog-entry
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'require-changelog-entry/**/*'
+      - '.github/workflows/test-require-changelog-entry.yaml'
+
+jobs:
+  test-require-changelog-entry:
+    name: Test require changelog entry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run on CHANGELOG.md
+        id: changelog
+        uses: ./require-changelog-entry
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: require-changelog-entry@
+          changelog_path: require-changelog-entry/docs/CHANGELOG.md
+
+      - name: Print CHANGELOG.md Outputs
+        run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: ${{ toJSON(steps.changelog.outputs) }}
+
+      - name: Run on no-changes-changelog.md
+        id: no_changes_changelog
+        uses: ./require-changelog-entry
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: require-changelog-entry@
+          changelog_path: require-changelog-entry/docs/no-changes-changelog.md
+
+      - name: Print no-changes-changelog.md Outputs
+        run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: ${{ toJSON(steps.no_changes_changelog.outputs) }}
+
+      - name: Run on no-versions-changelog.md
+        id: no_versions_changelog
+        uses: ./require-changelog-entry
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: require-changelog-entry@
+          changelog_path: require-changelog-entry/docs/no-versions-changelog.md
+
+      - name: Print no-versions-changelog.md Outputs
+        run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: ${{ toJSON(steps.no_versions_changelog.outputs) }}
