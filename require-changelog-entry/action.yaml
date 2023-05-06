@@ -33,7 +33,7 @@ outputs:
 
   has_new_version:
     description: 'Boolean output indicating whether a new, untagged version was found in the CHANGELOG'
-    value: ${{ !steps.tag.outputs.exists }}
+    value: ${{ steps.tag.outputs.exists == 'false' }}
 
   changelog_version_exists:
     description: 'Boolean flag indicating whether the latest CHANGELOG version exists as a git tag.'
