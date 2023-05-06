@@ -55,6 +55,7 @@ jobs:
 | - | - |
 | has_changed | Boolean output indicating whether the CHANGELOG file has changed |
 | has_new_version | Boolean output indicating whether a new, untagged version was found in the CHANGELOG |
+| changelog_version_exists | Boolean flag indicating whether the latest CHANGELOG version exists as a git tag. |
 | has_unreleased | Boolean output indicating whether the "Unreleased" section of the CHANGELOG has changed |
 | changelog_latest_version | Latest as-is CHANGELOG version entry. |
 | prepared_latest_version | Latest prefix/suffix prepared CHANGELOG version entry. |

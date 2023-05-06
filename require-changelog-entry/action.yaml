@@ -35,6 +35,10 @@ outputs:
     description: 'Boolean output indicating whether a new, untagged version was found in the CHANGELOG'
     value: ${{ !steps.tag.outputs.exists }}
 
+  changelog_version_exists:
+    description: 'Boolean flag indicating whether the latest CHANGELOG version exists as a git tag.'
+    value: ${{ steps.tag.outputs.exists }}
+
   has_unreleased:
     description: 'Boolean output indicating whether the "Unreleased" section of the CHANGELOG has changed'
     value: ${{ steps.unreleased.outputs.changed }}
