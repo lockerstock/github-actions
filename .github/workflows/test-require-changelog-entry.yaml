@@ -22,6 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_prefix: require-changelog-entry@
           changelog_path: require-changelog-entry/docs/CHANGELOG.md
+          error_on_missing: true
 
       - name: Print CHANGELOG.md Outputs
         run: echo "$OUTPUTS"
