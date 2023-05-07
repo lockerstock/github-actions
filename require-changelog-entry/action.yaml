@@ -163,7 +163,7 @@ runs:
       run: |
         echo "::error file=${{ inputs.changelog_path }}::${{ inputs.error_message }}"
 
-        if [ "${{ inputs.error_on_missing == 'true' }}" ]; then
+        if [ "${{ inputs.error_on_missing }}" = true ]; then
           exit 1
         fi
       shell: bash
