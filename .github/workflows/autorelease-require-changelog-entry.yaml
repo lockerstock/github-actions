@@ -1,0 +1,31 @@
+name: Auto Release require-changelog-entry
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - require-changelog-entry/docs/CHANGELOG.md
+
+jobs:
+  changelog-autorelease:
+    name: Auto Release from CHANGELOG
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Auto Release from CHANGELOG
+        id: changelog
+        uses: ./autorelease
+        with:
+          token: ${{ secret.GITHUB_TOKEN }}
+          changelog_path: require-changelog-entry/docs/CHANGELOG.md
+          tag_prefix: require-changelog-entry@
+
+      - name: Print auto release Outputs
+        if: always()
+        run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: ${{ toJSON(steps.changelog.outputs) }}
