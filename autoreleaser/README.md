@@ -23,6 +23,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Auto Release from CHANGELOG
         id: changelog
         uses: lockerstock/github-actions/autorelease@main
@@ -55,7 +58,6 @@ jobs:
 | - | - |
 | changelog_version | Latest as-is CHANGELOG version entry or version matching inputted tag. |
 | prepared_version | Latest prefix/suffix prepared CHANGELOG version entry. |
-| created_release | Boolean flag indicating whether a new tag and release was created. Will be false if the latest version in the CHANGELOG already exists as a tag in the repository. |
 
 
 
