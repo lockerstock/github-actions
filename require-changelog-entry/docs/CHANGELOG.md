@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional exit with error state on no new CHANGELOG entries
 - Append customizable error message to CHANGELOG file when no new entries
 
+### Fixed
+
+- Broken auto-release GHA workflow
+
 ## [v0.1.0]
 
 ### Added

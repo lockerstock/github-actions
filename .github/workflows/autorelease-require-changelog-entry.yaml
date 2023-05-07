@@ -20,7 +20,7 @@ jobs:
         id: changelog
         uses: ./autorelease
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           changelog_path: require-changelog-entry/docs/CHANGELOG.md
           tag_prefix: require-changelog-entry@
 
