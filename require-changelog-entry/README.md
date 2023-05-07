@@ -38,11 +38,13 @@ jobs:
 
 | parameter | description | required | default |
 | - | - | - | - |
-| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `false` |  |
+| token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
 | default_branch | Default branch to compare the "Unreleased" section of the CHANGELOG to. | `false` | ${{ github.event.repository.default_branch }} |
 | tag_prefix | Optional prefix string to apply to tag search | `false` |  |
 | tag_suffix | Optional suffix string to apply to tag search | `false` |  |
 | changelog_path | Path to CHANGELOG file within repository | `false` | CHANGELOG.md |
+| error_on_missing | Boolean flag to have this action terminate with error when a new version and new Unreleased entry are not found. | `false` | false |
+| error_message | Error message to print when a new version and new Unreleased entry are not found. Will be applied as an error to the given CHANGELOG path. | `false` | It is required via GitHub Action workflow that this CHANGELOG has a new version or new Unreleased entry. |
 
 
 

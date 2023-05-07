@@ -22,13 +22,16 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_prefix: require-changelog-entry@
           changelog_path: require-changelog-entry/docs/CHANGELOG.md
+          error_on_missing: true
 
       - name: Print CHANGELOG.md Outputs
+        if: always()
         run: echo "$OUTPUTS"
         env:
           OUTPUTS: ${{ toJSON(steps.changelog.outputs) }}
 
       - name: Run on no-changes-changelog.md
+        if: always()
         id: no_changes_changelog
         uses: ./require-changelog-entry
         with:
@@ -37,6 +40,7 @@ jobs:
           changelog_path: require-changelog-entry/docs/no-changes-changelog.md
 
       - name: Print no-changes-changelog.md Outputs
+        if: always()
         run: echo "$OUTPUTS"
         env:
           OUTPUTS: ${{ toJSON(steps.no_changes_changelog.outputs) }}

@@ -4,7 +4,7 @@ description: 'Checks the CHANGELOG for either new version entry or an updated en
 inputs:
   token:
     description: GITHUB_TOKEN to access the GitHub API if the repository is private
-    required: false
+    required: true
 
   default_branch:
     description: Default branch to compare the "Unreleased" section of the CHANGELOG to.
@@ -26,6 +26,16 @@ inputs:
     required: false
     default: 'CHANGELOG.md'
 
+  error_on_missing:
+    description: Boolean flag to have this action terminate with error when a new version and new Unreleased entry are not found.
+    required: false
+    default: 'false'
+
+  error_message:
+    description: Error message to print when a new version and new Unreleased entry are not found. Will be applied as an error to the given CHANGELOG path.
+    required: false
+    default: 'It is required via GitHub Action workflow that this CHANGELOG has a new version or new Unreleased entry.'
+
 outputs:
   has_changed:
     description: 'Boolean output indicating whether the CHANGELOG file has changed'
@@ -33,7 +43,7 @@ outputs:
 
   has_new_version:
     description: 'Boolean output indicating whether a new, untagged version was found in the CHANGELOG'
-    value: ${{ steps.tag.outputs.exists == 'false' }}
+    value: ${{ steps.new_version.outputs.has_new_version }}
 
   changelog_version_exists:
     description: 'Boolean flag indicating whether the latest CHANGELOG version exists as a git tag.'
@@ -138,5 +148,22 @@ runs:
           echo "changed=false" >> $GITHUB_OUTPUT
         else
           echo "changed=true" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    - name: Check for new version
+      id: new_version
+      run: echo "has_new_version=${{ steps.tag.outputs.exists == 'false' }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    ###### Error on missing new entries ######
+
+    - name: Error on Missing New entries
+      if: steps.new_version.outputs.has_new_version == 'false' && steps.unreleased.outputs.changed == 'false'
+      run: |
+        echo "::error file=${{ inputs.changelog_path }}::${{ inputs.error_message }}"
+
+        if [ "${{ inputs.error_on_missing }}" = true ]; then
+          exit 1
         fi
       shell: bash
