@@ -30,7 +30,7 @@ jobs:
         id: changelog
         uses: lockerstock/github-actions/autoreleaser@main
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           changelog_path: CHANGELOG.md
 ```
 
