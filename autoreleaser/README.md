@@ -14,9 +14,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - CHANGELOG.md
 
 jobs:
-  changelog-autorelease
+  changelog-autorelease:
     name: Auto Release from CHANGELOG
     runs-on: ubuntu-latest
 
@@ -35,10 +37,7 @@ jobs:
 | parameter | description | required | default |
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
-| tag | Optional tag version to search for in the CHANGELOG. This can be used if prior steps determine which version needs released. 
-If the provided input does not exist in the CHANGELOG, this action will fail.
-If this input is not provided, then the latest entry in the CHANGELOG will be retrieved.
- | `false` |  |
+| tag | Optional tag version to search for in the CHANGELOG. This can be used if prior steps determine which version needs released. If the provided input does not exist in the CHANGELOG, this action will fail. If this input is not provided, then the latest entry in the CHANGELOG will be retrieved. | `false` |  |
 | tag_prefix | Optional prefix string to apply to tag during creation. | `false` |  |
 | tag_suffix | Optional suffix string to apply to tag during creation. | `false` |  |
 | changelog_path | Path to CHANGELOG file within repository | `false` | CHANGELOG.md |

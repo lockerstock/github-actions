@@ -7,10 +7,7 @@ inputs:
     required: true
 
   tag:
-    description: |
-      Optional tag version to search for in the CHANGELOG. This can be used if prior steps determine which version needs released. 
-      If the provided input does not exist in the CHANGELOG, this action will fail.
-      If this input is not provided, then the latest entry in the CHANGELOG will be retrieved.
+    description: Optional tag version to search for in the CHANGELOG. This can be used if prior steps determine which version needs released. If the provided input does not exist in the CHANGELOG, this action will fail. If this input is not provided, then the latest entry in the CHANGELOG will be retrieved.
     required: false
     default: ''
 
