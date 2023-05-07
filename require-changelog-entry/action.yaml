@@ -94,14 +94,14 @@ runs:
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.token }}
-        path: ${{ input.checkout_path }}/current
+        path: ${{ inputs.checkout_path }}/current
 
     - name: Checkout Repository at default branch
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.token }}
         ref: ${{ inputs.default_branch }}
-        path: ${{ input.checkout_path }}/default
+        path: ${{ inputs.checkout_path }}/default
 
     ###### Retrieve latest and Unreleased entries from CHANGELOGs ######
 
@@ -110,14 +110,14 @@ runs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ input.checkout_path }}/current/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/current/${{ inputs.changelog_path }}
 
     - name: Get Current Unreleased Changelog Entry
       id: current_unreleased
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ input.checkout_path }}/current/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/current/${{ inputs.changelog_path }}
         version: Unreleased
 
     - name: Get Default Unreleased Changelog Entry
@@ -125,7 +125,7 @@ runs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ input.checkout_path }}/default/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/default/${{ inputs.changelog_path }}
         version: Unreleased
 
     ###### Prepare Latest Tag ######
