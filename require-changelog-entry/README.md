@@ -23,7 +23,7 @@ jobs:
         id: changelog
         uses: lockerstock/github-actions/require-changelog-entry@main
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           changelog_path: CHANGELOG.md
 
       - name: 'Error if no Changelog entry'
@@ -40,6 +40,7 @@ jobs:
 | - | - | - | - |
 | token | GITHUB_TOKEN to access the GitHub API if the repository is private | `true` |  |
 | default_branch | Default branch to compare the "Unreleased" section of the CHANGELOG to. | `false` | ${{ github.event.repository.default_branch }} |
+| checkout_path | This action checks out the repository for the current SHA as well as from the default branch. This path indicates where to checkout the repositories as to not clash with any other work in the workflow. | `false` | temp/require-changelog-entry |
 | tag_prefix | Optional prefix string to apply to tag search | `false` |  |
 | tag_suffix | Optional suffix string to apply to tag search | `false` |  |
 | changelog_path | Path to CHANGELOG file within repository | `false` | CHANGELOG.md |

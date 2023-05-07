@@ -11,6 +11,11 @@ inputs:
     default: ${{ github.event.repository.default_branch }}
     required: false
 
+  checkout_path:
+    description: This action checks out the repository for the current SHA as well as from the default branch. This path indicates where to checkout the repositories as to not clash with any other work in the workflow.
+    default: temp/require-changelog-entry
+    required: false
+
   tag_prefix:
     description: Optional prefix string to apply to tag search
     required: false
@@ -89,14 +94,14 @@ runs:
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.token }}
-        path: ${{ github.action_path }}/current
+        path: ${{ inputs.checkout_path }}/current
 
     - name: Checkout Repository at default branch
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.token }}
         ref: ${{ inputs.default_branch }}
-        path: ${{ github.action_path }}/default
+        path: ${{ inputs.checkout_path }}/default
 
     ###### Retrieve latest and Unreleased entries from CHANGELOGs ######
 
@@ -105,14 +110,14 @@ runs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ github.action_path }}/current/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/current/${{ inputs.changelog_path }}
 
     - name: Get Current Unreleased Changelog Entry
       id: current_unreleased
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ github.action_path }}/current/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/current/${{ inputs.changelog_path }}
         version: Unreleased
 
     - name: Get Default Unreleased Changelog Entry
@@ -120,7 +125,7 @@ runs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        path: ${{ github.action_path }}/default/${{ inputs.changelog_path }}
+        path: ${{ inputs.checkout_path }}/default/${{ inputs.changelog_path }}
         version: Unreleased
 
     ###### Prepare Latest Tag ######
