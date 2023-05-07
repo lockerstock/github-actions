@@ -1,0 +1,101 @@
+name: Changelog Auto Releaser
+description: Auto Release action based on new CHANGELOG entry version
+
+inputs:
+  token:
+    description: GITHUB_TOKEN to access the GitHub API if the repository is private
+    required: true
+
+  tag:
+    description: |
+      Optional tag version to search for in the CHANGELOG. This can be used if prior steps determine which version needs released. 
+      If the provided input does not exist in the CHANGELOG, this action will fail.
+      If this input is not provided, then the latest entry in the CHANGELOG will be retrieved.
+    required: false
+    default: ''
+
+  tag_prefix:
+    description: Optional prefix string to apply to tag during creation.
+    required: false
+    default: ''
+
+  tag_suffix:
+    description: Optional suffix string to apply to tag during creation.
+    required: false
+    default: ''
+
+  changelog_path:
+    description: Path to CHANGELOG file within repository
+    required: false
+    default: 'CHANGELOG.md'
+
+  artifacts:
+    description: An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma delimited list of paths (or globs).
+    required: false
+
+  replace_artifacts:
+    description: Indicates if existing release artifacts should be replaced.
+    required: false
+    default: 'true'
+
+outputs:
+  changelog_version:
+    description: 'Latest as-is CHANGELOG version entry or version matching inputted tag.'
+    value: ${{ steps.current_latest.outputs.version }}
+
+  prepared_version:
+    description: 'Latest prefix/suffix prepared CHANGELOG version entry.'
+    value: ${{ steps.prepared.outputs.version }}
+
+  created_release:
+    description: 'Boolean flag indicating whether a new tag and release was created. Will be false if the latest version in the CHANGELOG already exists as a tag in the repository.'
+    value: false'
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Get Changelog Entry
+      id: changelog_reader
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        validation_level: none
+        path: ${{ inputs.changelog_path }}
+        version: ${{ inputs.tag }}
+
+    - name: Prepare Tag
+      id: prepared
+      run: echo "version=${{ inputs.tag_prefix }}${{ steps.changelog_reader.outputs.version }}${{ inputs.tag_suffix }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Check if tag already exists
+      uses: lockerstock/github-actions/git-tag-exists@main
+      id: tag
+      with:
+        token: ${{ inputs.token }}
+        tag: ${{ steps.prepared.outputs.version }}
+
+    - name: Create Tag
+      id: tag_version
+      if: steps.tag.outputs.exists == 'false'
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ inputs.token }}
+        custom_tag: ${{ steps.prepared.outputs.version }}
+        release_branches: ${{ github.event.repository.name }}
+        tag_prefix: ''
+
+    - name: Create a GitHub release
+      if: steps.tag.outputs.exists == 'false'
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ inputs.token }}
+        tag: ${{ steps.prepared.outputs.version }}
+        name: ${{ steps.prepared.outputs.version }}
+        body: ${{ steps.changelog_reader.outputs.changes }}
+        artifacts: ${{ inputs.artifacts }}
+        replacesArtifacts: ${{ inputs.replace_artifacts }}
+        prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
+        draft: false
