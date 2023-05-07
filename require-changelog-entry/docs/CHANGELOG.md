@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Broken auto-release GHA workflow
+- Broken auto-release GHA workflow (twice)
 
 ## [v0.1.0]
 

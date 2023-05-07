@@ -28,7 +28,7 @@ jobs:
 
       - name: Auto Release from CHANGELOG
         id: changelog
-        uses: lockerstock/github-actions/autorelease@main
+        uses: lockerstock/github-actions/autoreleaser@main
         with:
           token: ${{ secret.GITHUB_TOKEN }}
           changelog_path: CHANGELOG.md
