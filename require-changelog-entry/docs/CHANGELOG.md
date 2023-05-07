@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.2.0]
+
+### Added
+
+- Optional exit with error state on no new CHANGELOG entries
+- Append customizable error message to CHANGELOG file when no new entries
+
 ## [v0.1.0]
 
 ### Added
