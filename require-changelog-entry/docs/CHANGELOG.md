@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.2.1]
+
+### Fixed
+
+- Invalid checkout process on `${{ github.action_path }}` path.
+
 ## [v0.2.0]
 
 ### Added
