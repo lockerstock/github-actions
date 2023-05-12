@@ -1,0 +1,8 @@
+name: Cleanup Deleted Branch
+on:
+  - delete
+
+jobs:
+  call-cleanup-deleted-branch-workflow:
+    name: Cleanup Deleted Branch
+    uses: lockerstock/github-actions/.github/workflows/reusable-cleanup-deleted-branch.yaml@main
