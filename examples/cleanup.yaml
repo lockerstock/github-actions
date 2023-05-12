@@ -1,0 +1,11 @@
+name: Cleanup Repository Resources
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 15 6 5 * * # 6:15AM UTC on 5th day of every month (1:15AM CDT/12:15AM CST)
+
+jobs:
+  call-cleanup-repository-workflow:
+    name: Cleanup Repository Resources
+    uses: lockerstock/github-actions/.github/workflows/reusable-cleanup-repository.yaml@main

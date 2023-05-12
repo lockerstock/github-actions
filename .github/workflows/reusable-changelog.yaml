@@ -1,0 +1,62 @@
+name: Changelog Auto-releaser
+
+on:
+  workflow_call:
+    inputs:
+      changelog_path:
+        default: CHANGELOG.md
+        required: false
+        type: string
+        description: 'Path to CHANGELOG'
+
+      tag_prefix:
+        default: ''
+        required: false
+        type: string
+        description: 'Optional prefix string to apply to tag during creation.'
+
+      tag_suffix:
+        default: ''
+        required: false
+        type: string
+        description: 'Optional suffix string to apply to tag during creation.'
+
+jobs:
+  require_changelog_entry:
+    name: Require Changelog Entry
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Require Changelog Entry
+        id: changelog
+        uses: lockerstock/github-actions/require-changelog-entry@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          changelog_path: ${{ inputs.changelog_path }}
+          error_on_missing: true
+          tag_prefix: ${{ inputs.tag_prefix }}
+          tag_suffix: ${{ inputs.tag_suffix }}
+
+  changelog_auto_release:
+    name: Auto Release Changelog Entry
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Auto Release from CHANGELOG
+        id: changelog
+        uses: lockerstock/github-actions/autoreleaser@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          changelog_path: ${{ inputs.changelog_path }}
+          tag_prefix: ${{ inputs.tag_prefix }}
+          tag_suffix: ${{ inputs.tag_suffix }}

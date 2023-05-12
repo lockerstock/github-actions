@@ -1,0 +1,13 @@
+name: Push Buf Resources
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-push-buf-workflow:
+    name: Push Buf Resources
+    uses: lockerstock/github-actions/.github/workflows/reusable-push-buf.yaml@main
+    secrets:
+      BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
