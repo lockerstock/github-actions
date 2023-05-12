@@ -28,9 +28,6 @@ jobs:
 
     if: github.event_name == 'pull_request'
 
-    permissions:
-      contents: read
-
     steps:
       - name: Require Changelog Entry
         id: changelog
