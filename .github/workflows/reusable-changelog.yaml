@@ -60,7 +60,7 @@ jobs:
         id: changelog
         uses: lockerstock/github-actions/autoreleaser@main
         with:
-          token: ${{ inputs.token || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.token || secrets.GITHUB_TOKEN }}
           changelog_path: ${{ inputs.changelog_path }}
           tag_prefix: ${{ inputs.tag_prefix }}
           tag_suffix: ${{ inputs.tag_suffix }}
