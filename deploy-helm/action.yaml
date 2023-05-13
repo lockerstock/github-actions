@@ -189,8 +189,8 @@ runs:
 
     ##### Prepare and attach Helm charts to release #####
 
-    - name: Build Template From Repository
-      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci != 'true'
+    - name: Build Template From Local Chart
+      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci != 'true' && steps.chart.outputs.has_repo != 'true'
       run: |
         helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} \
           > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
@@ -212,11 +212,6 @@ runs:
           --version "${{ steps.chart.outputs.version_constraint }}" \
           -f ${{ inputs.chart_path }}/values.yaml \
           > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
-      shell: bash
-
-    - name: Build Template From Repository
-      if: github.ref_type == 'tag' && steps.chart.outputs.has_oci != 'true'
-      run: helm template ${{ steps.repository.outputs.variable }} ${{ inputs.chart_path }} > ${{ steps.repository.outputs.variable }}-${{ steps.version.outputs.variable }}.yaml
       shell: bash
 
     - name: Add template to release

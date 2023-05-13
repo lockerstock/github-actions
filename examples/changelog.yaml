@@ -1,4 +1,4 @@
-name: Changelog Auto-releaser
+name: Changelog
 
 on:
   push:
@@ -13,5 +13,5 @@ concurrency:
 
 jobs:
   call-changelog-workflow:
-    name: Changelog Auto-releaser
+    name: Auto Releaser
     uses: lockerstock/github-actions/.github/workflows/reusable-changelog.yaml@main
