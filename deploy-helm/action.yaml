@@ -243,7 +243,7 @@ runs:
           ### Upgrade/install Helm chart
 
           ```shell
-          helm upgrade --install ${{ github.event.repository.name }} ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }}
+          helm upgrade --install ${{ github.event.repository.name }} ${{ github.repository_owner }}/${{ steps.chart.outputs.chart }} \
             --version ${{ steps.repo_version.outputs.version }} \
             -f values.yaml \
             --namespace production
