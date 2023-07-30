@@ -25,26 +25,32 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup buf CLI
+        id: buf
         uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint Protobuf sources
+        if: steps.buf.outcome == 'success'
         uses: bufbuild/buf-lint-action@v1
         with:
           BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
 
       - name: Build Protobuf sources
+        if: steps.buf.outcome == 'success' && always()
         run: buf build
 
       - name: Format Protobuf sources
+        if: steps.buf.outcome == 'success' && always()
         run: buf format -w
 
       - name: Generate Protobuf server/clients
+        if: steps.buf.outcome == 'success' && always()
         run: buf generate
 
       - name: Breaking Change Detection
         uses: bufbuild/buf-breaking-action@v1
+        if: steps.buf.outcome == 'success' && always()
         id: breaking
         with:
           input: proto/api
@@ -53,6 +59,7 @@ jobs:
           buf_input_https_password: ${{ secrets.GHA_ACCESS_TOKEN }}
 
       - name: Compare proto/ directory for changes
+        if: always()
         run: |
           if [ "$(git diff --ignore-space-at-eol proto/ | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build.  See status below:"
