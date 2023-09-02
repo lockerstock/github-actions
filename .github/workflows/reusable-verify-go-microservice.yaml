@@ -7,6 +7,10 @@ on:
         type: string
         required: false
         default: '^1.20'
+      skip-verify-buf:
+        type: boolean
+        required: false
+        default: false
     secrets:
       GHA_ACCESS_USER:
         required: true
@@ -19,6 +23,7 @@ jobs:
   verify-buf:
     name: Buf Verification
     runs-on: ubuntu-latest
+    if: inputs.skip-verify-buf != true
 
     steps:
       - name: Checkout Repo
