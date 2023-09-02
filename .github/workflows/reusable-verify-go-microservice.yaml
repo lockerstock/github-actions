@@ -13,11 +13,11 @@ on:
         default: false
     secrets:
       GHA_ACCESS_USER:
-        required: true
+        required: false
       GHA_ACCESS_TOKEN:
         required: true
       BUF_TOKEN:
-        required: true
+        required: false
 
 jobs:
   verify-buf:
