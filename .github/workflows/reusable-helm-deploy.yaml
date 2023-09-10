@@ -71,7 +71,8 @@ jobs:
         with:
           push: true
           tags: ${{ steps.docker.outputs.tags }}
-          platforms: linux/amd64,linux/arm64
+          # TODO: When arm64 k8s nodes are available, revert platforms to `linux/amd64,linux/arm64`.
+          platforms: linux/amd64
           labels: |
             "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}"
             "org.opencontainers.image.authors=${{ github.repository_owner }},${{ github.actor }}"
